@@ -1,0 +1,11 @@
+
+.btnadmin {
+    background-color: #f0634b;
+    border-color: #f0634b;
+    color: white;
+}
+
+.btnadmin:hover {
+    background-color: #f74c2e;
+    border-color: #f74c2e;
+}

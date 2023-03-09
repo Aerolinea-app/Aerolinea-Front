@@ -1,1 +1,60 @@
 /* You can add global styles to this file, and also import other style files */
+
+.btn-grande {
+    background-color: rgb(49, 192, 224);
+    border-color: rgb(49, 192, 224);
+    padding: 1rem 2rem;
+    border-radius: 20px;
+    transition: .1s ease-in;
+    text-transform: uppercase;
+}
+
+h1 {
+    text-transform: uppercase;
+}
+button {
+    padding: 1rem 2rem;
+    transition: .1s ease-in;
+    text-transform: uppercase;
+}
+
+.btn-grande:hover {
+    background-color: rgb(49, 171, 224);
+    border-color: rgb(49, 171, 224);
+    border-width: 4px;
+}
+
+.navbar {
+    background-color: rgb(49, 171, 224);
+    height: 70px;
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+}
+
+.btn-naranja {
+    background-color: #f0634b;
+    border-color: #f0634b;
+    color: white;
+}
+
+.btn-naranja {
+    background-color: #f74c2e;
+    border-color: #f74c2e;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.fondoGris {
+    background-color: #f1f1f1;
+    padding: 1.5rem;
+    border-radius: 1rem;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+.mensajeValidacion {
+    color: #da2d2d;
+}
+

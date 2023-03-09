@@ -1,0 +1,12 @@
+p {
+    font-family: 'Inconsolata', monospace;
+    font-size: 40px;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.home {
+    background: url(../../assets/img/home.jpg) no-repeat center center fixed; 
+    height: 100vh;
+    background-size: cover;
+}
