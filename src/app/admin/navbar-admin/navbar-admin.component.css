@@ -1,4 +1,13 @@
 .navbar {
-    background-color: #f0634b;
+    background-color: #5e96bd;
+}
 
+a{
+    font-size: 30px;
+    margin-right: 68%;
+}
+
+img{
+    width: 50px;
+    margin-right: 20px;
 }
