@@ -1,0 +1,62 @@
+<div mat-dialog-title>
+    <h1>{{data ? 'Modificar': 'Añadir'}} Usuario</h1>
+</div>
+<form [formGroup]="usuarioForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Cedula</mat-label>
+                <input matInput type="text" placeholder="Ej. 1000000000" formControlName="id">
+            </mat-form-field>
+
+            <div class="col">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput type="text" placeholder="Ej. Arturo" formControlName="nombre">
+                </mat-form-field>
+            </div>
+            <div class="col">
+                <mat-form-field appearance="outline">
+                    <mat-label>Apellido</mat-label>
+                    <input matInput type="text" placeholder="Ej. Barona" formControlName="apellido">
+                </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+                <mat-label>Correo</mat-label>
+                <input matInput type="text" placeholder="Ej. Arturo" formControlName="correo">
+            </mat-form-field>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Rol</mat-label>
+                        <select matNativeControl formControlName="idRolUsuario">
+                            <option value="">Seleccione un rol</option>
+                            <option *ngFor="let rol of roles" [value]="rol.id">
+                                {{ rol.id }}
+                            </option>
+                        </select>
+                    </mat-form-field>
+                </div>
+
+
+
+                <div class="col">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Estado</mat-label>
+                        <mat-select formControlName="estado">
+                            <mat-option value="Activo">Activo</mat-option>
+                            <mat-option value="Inactivo">Inactivo</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Actualizar': 'Guardar'}}</button>
+    </div>
+
+</form>

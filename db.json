@@ -1,0 +1,358 @@
+{
+  "usuarios": [
+    {
+      "id": "1023456789",
+      "idRolUsuario": "ROL-001",
+      "nombre": "Juan",
+      "apellido": "Pérez",
+      "cedula": "",
+      "correo": "juan.perez@example.com",
+      "estado": "Activo"
+    },
+    {
+      "id": "1122334455",
+      "idRolUsuario": "ROL-002",
+      "nombre": "María",
+      "apellido": "García",
+      "cedula": "",
+      "correo": "maria.garcia@example.com",
+      "estado": "Activo"
+    },
+    {
+      "id": "1234567890",
+      "nombre": "Carlos",
+      "apellido": "Sánchez",
+      "correo": "carlos.sanchez@example.com",
+      "idRolUsuario": "ROL-001",
+      "estado": "Activo"
+    },
+    {
+      "id": "2345678901",
+      "nombre": "Laura",
+      "apellido": "Gómez",
+      "correo": "laura.gomez@example.com",
+      "idRolUsuario": "ROL-002",
+      "estado": "Activo"
+    },
+    {
+      "id": "1006268770",
+      "idRolUsuario": "ROL-002",
+      "nombre": "Juan Camilo",
+      "apellido": "Rodríguez",
+      "cedula": "",
+      "correo": "juamcamirodri@gmail.com",
+      "estado": "Activo"
+    }
+  ],
+  "aviones": [
+    {
+      "id": "AV-736",
+      "aerolinea": "LATAM Airlines",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-393",
+      "aerolinea": "Avianca",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-124",
+      "aerolinea": "Aerolíneas Argentinas",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-432",
+      "aerolinea": "GOL Airlines",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-325",
+      "aerolinea": "Azul Brazilian Airlines",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-223",
+      "aerolinea": "TAM Airlines",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-912",
+      "aerolinea": "Copa Airlines",
+      "estado": "Activo"
+    },
+    {
+      "id": "AV-564",
+      "aerolinea": "Aeroméxico",
+      "estado": "Inactivo"
+    },
+    {
+      "id": "AV-847",
+      "aerolinea": "Interjet",
+      "estado": "Inactivo"
+    }
+  ],
+  "vuelos": [
+    {
+      "id": "VUE-001",
+      "idAeropuertoOrigen": "AE-001",
+      "idAeropuertoDestino": "AE-002",
+      "precio": 1200000,
+      "fechaHoraSalida": "2023-05-15 08:00:00",
+      "fechaHoraLlegada": "2023-05-15 10:00:00",
+      "precioAsientoPreferencial": 150000,
+      "precioAsientoVip": 250000,
+      "precioAsientoTurista": 80000,
+      "estado": "Activo"
+    },
+    {
+      "id": "VUE-002",
+      "idAeropuertoOrigen": "AE-003",
+      "idAeropuertoDestino": "AE-004",
+      "precio": 900000,
+      "fechaHoraSalida": "2023-06-10 14:30:00",
+      "fechaHoraLlegada": "2023-06-10 16:30:00",
+      "precioAsientoPreferencial": 120000,
+      "precioAsientoVip": 200000,
+      "precioAsientoTurista": 60000,
+      "estado": "Activo"
+    },
+    {
+      "id": "VUE-003",
+      "idAeropuertoOrigen": "AE-005",
+      "idAeropuertoDestino": "AE-006",
+      "precio": 800000,
+      "fechaHoraSalida": "2023-07-01 11:00:00",
+      "fechaHoraLlegada": "2023-07-01 13:00:00",
+      "precioAsientoPreferencial": 100000,
+      "precioAsientoVip": 180000,
+      "precioAsientoTurista": 50000,
+      "estado": "Activo"
+    },
+    {
+      "id": "VUE-004",
+      "idAeropuertoOrigen": "AE-007",
+      "idAeropuertoDestino": "AE-008",
+      "precio": 1500000,
+      "fechaHoraSalida": "2023-08-12 07:45:00",
+      "fechaHoraLlegada": "2023-08-12 09:45:00",
+      "precioAsientoPreferencial": 200000,
+      "precioAsientoVip": 350000,
+      "precioAsientoTurista": 120000,
+      "estado": "Activo"
+    }
+  ],
+  "aeropuerto": [
+    {
+      "id": "AE-001",
+      "nombre": "Aeropuerto Internacional El Dorado",
+      "iata": "BOG",
+      "ubicacion": "Bogotá",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-002",
+      "nombre": "Aeropuerto Internacional José María Córdova",
+      "iata": "MDE",
+      "ubicacion": "Rionegro, Antioquia",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-003",
+      "nombre": "Aeropuerto Internacional Rafael Núñez",
+      "iata": "CTG",
+      "ubicacion": "Cartagena de Indias",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-004",
+      "nombre": "Aeropuerto Internacional Alfonso Bonilla Aragón",
+      "iata": "CLO",
+      "ubicacion": "Palmira, Valle del Cauca",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-005",
+      "nombre": "Aeropuerto Internacional Ernesto Cortissoz",
+      "iata": "BAQ",
+      "ubicacion": "Soledad, Atlántico",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-006",
+      "nombre": "Aeropuerto Internacional Matecaña",
+      "iata": "PEI",
+      "ubicacion": "Pereira, Risaralda",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-007",
+      "nombre": "Aeropuerto Internacional Gustavo Rojas Pinilla",
+      "iata": "ADZ",
+      "ubicacion": "San Andrés",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-008",
+      "nombre": "Aeropuerto Internacional El Edén",
+      "iata": "AXM",
+      "ubicacion": "La Tebaida, Quindío",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-009",
+      "nombre": "Aeropuerto Internacional Antonio Nariño",
+      "iata": "PSO",
+      "ubicacion": "Pasto, Nariño",
+      "estado": "Operativo"
+    },
+    {
+      "id": "AE-010",
+      "nombre": "Aeropuerto Internacional Palonegro",
+      "iata": "BGA",
+      "ubicacion": "Lebrija, Santander",
+      "estado": "Operativo"
+    }
+  ],
+  "asientos": [
+    {
+      "id": "AS-001",
+      "idTipoAsiento": "T-AS-001",
+      "idAvion": "AV-001",
+      "ubicacion": "Fila 1, Asiento A",
+      "precio": 120000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-002",
+      "idTipoAsiento": "T-AS-002",
+      "idAvion": "AV-001",
+      "ubicacion": "Fila 1, Asiento B",
+      "precio": 120000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-003",
+      "idTipoAsiento": "T-AS-001",
+      "idAvion": "AV-001",
+      "ubicacion": "Fila 2, Asiento A",
+      "precio": 100000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-004",
+      "idTipoAsiento": "T-AS-002",
+      "idAvion": "AV-001",
+      "ubicacion": "Fila 2, Asiento B",
+      "precio": 100000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-005",
+      "idTipoAsiento": "T-AS-003",
+      "idAvion": "AV-001",
+      "ubicacion": "Fila 3, Asiento A",
+      "precio": 80000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-006",
+      "idTipoAsiento": "T-AS-003",
+      "idAvion": "AV-001",
+      "ubicacion": "Fila 3, Asiento B",
+      "precio": 80000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-007",
+      "idTipoAsiento": "T-AS-001",
+      "idAvion": "AV-002",
+      "ubicacion": "Fila 1, Asiento A",
+      "precio": 130000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-008",
+      "idTipoAsiento": "T-AS-002",
+      "idAvion": "AV-002",
+      "ubicacion": "Fila 1, Asiento B",
+      "precio": 130000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-009",
+      "idTipoAsiento": "T-AS-001",
+      "idAvion": "AV-002",
+      "ubicacion": "Fila 2, Asiento A",
+      "precio": 110000,
+      "estado": "Disponible"
+    },
+    {
+      "id": "AS-010",
+      "idTipoAsiento": "T-AS-002",
+      "idAvion": "AV-002",
+      "ubicacion": "Fila 2, Asiento B",
+      "precio": 110000,
+      "estado": "Disponible"
+    }
+  ],
+  "facturas": [
+    {
+      "id": "FAC-908",
+      "idUsuario": "1023456789",
+      "fecha": "2023-04-20T05:00:00.000Z",
+      "estado": "Activo"
+    }
+  ],
+  "reservas": [],
+  "rolUsuario": [
+    {
+      "id": "ROL-001",
+      "descripcion": "Administrador",
+      "estado": "Activo"
+    },
+    {
+      "id": "ROL-002",
+      "descripcion": "Usuario",
+      "estado": "Activo"
+    }
+  ],
+  "tipoAsientos": [
+    {
+      "id": "T-AS-001",
+      "descripcion": "Asiento Preferencial",
+      "estado": "Activo"
+    },
+    {
+      "id": "T-AS-002",
+      "descripcion": "Asiento VIP",
+      "estado": "Activo"
+    },
+    {
+      "id": "T-AS-003",
+      "descripcion": "Asiento Turista",
+      "estado": "Activo"
+    }
+  ],
+  "trayecto": [
+    {
+      "idAvion": "AV-736",
+      "idVuelo": "VUE-001",
+      "idAeropuertoDestino": "AE-002",
+      "idAeropuertoOrigen": "AE-001",
+      "horaSalida": "12:02",
+      "horaLlegada": "13:32",
+      "estado": "Disponible",
+      "id": "TRA-398"
+    },
+    {
+      "idAvion": "AV-432",
+      "idVuelo": "VUE-003",
+      "idAeropuertoDestino": "AE-006",
+      "idAeropuertoOrigen": "AE-005",
+      "horaSalida": "04:04",
+      "horaLlegada": "15:57",
+      "estado": "Disponible",
+      "id": "TRA-795"
+    }
+  ]
+}
