@@ -1,24 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export default class NavbarComponent implements OnInit {
+export class NavbarComponent {
 
-  constructor(
-    private router: Router
-  ) {
-    
-  }
-
-  ngOnInit(): void {
-   
-  }
-
-  admin() {
-    this.router.navigate(['/admin'])
-  }
 }

@@ -1,0 +1,84 @@
+<div mat-dialog-title>
+    <h1>{{data ? 'Modificar': 'Añadir'}} Vuelo</h1>
+</div>
+<form [formGroup]="vueloForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <div class="col">
+                <mat-form-field appearance="outline">
+                    <mat-label>Aeropuerto Origen</mat-label>
+                    <mat-select formControlName="idAeropuertoOrigen">
+                        <mat-option *ngFor="let aeropuerto of aeropuertos" [value]="aeropuerto.id">{{ aeropuerto.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="col">
+                <mat-form-field appearance="outline">
+                    <mat-label>Aeropuerto Destino</mat-label>
+                    <mat-select formControlName="idAeropuertoDestino">
+                        <mat-option *ngFor="let aeropuerto of aeropuertos" [value]="aeropuerto.id">{{ aeropuerto.nombre }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+        <div class="row">
+
+            <mat-form-field class="example-form-field" appearance="outline" [formGroup]="vueloForm">
+                <mat-label>Fecha de vuelo</mat-label>
+                <mat-date-range-input [rangePicker]="campaignOnePicker">
+                    <input matStartDate placeholder="Start date" formControlName="fechaHoraSalida">
+                    <input matEndDate placeholder="End date" formControlName="fechaHoraLlegada">
+                </mat-date-range-input>
+                <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+                <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+            </mat-form-field>
+
+        </div>
+
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Precio</mat-label>
+                    <input matInput type="text" placeholder="Ej. 200000" formControlName="precio">
+                </mat-form-field>
+            </div>
+
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Precio asiento preferencial</mat-label>
+                    <input matInput type="text" placeholder="Ej. 200000" formControlName="precioAsientoPreferencial">
+                </mat-form-field>
+            </div>
+
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Precio asiento vip</mat-label>
+                    <input matInput type="text" placeholder="Ej. 200000" formControlName="precioAsientoVip">
+                </mat-form-field>
+            </div>
+
+            <div class="col-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Precio asiento turista</mat-label>
+                    <input matInput type="text" placeholder="Ej. 200000" formControlName="precioAsientoTurista">
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Estado</mat-label>
+                <input matInput type="text" placeholder="Ej. no se" formControlName="estado">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Actualizar': 'Guardar'}}</button>
+    </div>
+</form>

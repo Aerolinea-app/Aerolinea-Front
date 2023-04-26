@@ -1,0 +1,27 @@
+<div mat-dialog-title>
+    <h1>{{data ? 'Modificar': 'Añadir'}} Avion</h1>
+</div>
+<form [formGroup]="avionForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Aerolinea</mat-label>
+                <input matInput type="text" placeholder="Ej. Avianca" formControlName="aerolinea">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="estado">
+                    <mat-option value="Activo">Activo</mat-option>
+                    <mat-option value="Inactivo">Inactivo</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+        </div>
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Actualizar': 'Guardar'}}</button>
+    </div>
+</form>

@@ -1,62 +1,41 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Avion } from 'src/app/models/Avion';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AvionService {
 
-  listAvion: Avion[] = [
-    {
-      numeroAvion: 'CO-2442',
-      nombreAvion: 'Avion1',
-      ciudadOrigen: 'Cali',
-      ciudadDestino: 'Buenaventura',
-      horaSalida: '03:45',
-      horaLlegada: '16:00',
-      minutosVuelo: '80',
-      imgAvion: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Air_india_b747-400_vt-esn_arp.jpg'
+  constructor(
+    private _http: HttpClient
+  ) { }
 
-    },
-    {
-      numeroAvion: 'CO-0001',
-      nombreAvion: 'Avion2',
-      ciudadOrigen: 'Buenaventura',
-      ciudadDestino: 'Cali',
-      horaSalida: '10:45',
-      horaLlegada: '10:00',
-      minutosVuelo: '80',
-      imgAvion: 'https://upload.wikimedia.org/wikipedia/commons/e/e0/Air_india_b747-400_vt-esn_arp.jpg'
-
-    },
-  ]
-
-  constructor() { }
-
-  getAviones() {
-    return this.listAvion.slice();
+  addAvion(nuevoAvion: any): Observable<any> {
+    const id = this.generarNuevoId();
+    nuevoAvion.id = id;
+    return this._http.post('http://localhost:3000/aviones', nuevoAvion);
   }
 
-  eliminarAvion(index: number) {
-    this.listAvion.splice(index, 1);
+  updateAvion(id: number, data: any): Observable<any> {
+    return this._http.put(`http://localhost:3000/aviones/${id}`, data)
   }
 
-  agregarAvion(avion: Avion) {
-    this.listAvion.unshift(avion)
+  getAvion(id: number): Observable<any> {
+    return this._http.get(`http://localhost:3000/aviones/${id}`)
   }
 
-  getAvion(index: number) {
-    return this.listAvion[index];
+
+  getAvionList(): Observable<any> {
+    return this._http.get('http://localhost:3000/aviones');
   }
 
-  editAvion(avion: Avion, idAvion: number) {
-    this.listAvion[idAvion].ciudadDestino = avion.ciudadDestino;
-    this.listAvion[idAvion].ciudadOrigen = avion.ciudadOrigen;
-    this.listAvion[idAvion].horaLlegada = avion.horaLlegada;
-    this.listAvion[idAvion].horaSalida = avion.horaSalida;
-    this.listAvion[idAvion].imgAvion = avion.imgAvion;
-    this.listAvion[idAvion].minutosVuelo = avion.minutosVuelo;
-    this.listAvion[idAvion].nombreAvion = avion.nombreAvion;
-    this.listAvion[idAvion].numeroAvion = avion.numeroAvion;
+  deleteAvion(id: number): Observable<any> {
+    return this._http.delete(`http://localhost:3000/aviones/${id}`)
+  }
+
+  private generarNuevoId(): string {
+    const numero = Math.floor(Math.random() * 1000) + 1;
+    return `AV-${numero.toString().padStart(3, '0')}`;
   }
 }

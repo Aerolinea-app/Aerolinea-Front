@@ -1,60 +1,62 @@
 /* You can add global styles to this file, and also import other style files */
 
-.btn-grande {
-    background-color: rgb(49, 192, 224);
-    border-color: rgb(49, 192, 224);
-    padding: 1rem 2rem;
-    border-radius: 20px;
-    transition: .1s ease-in;
-    text-transform: uppercase;
+html,
+body {
+    height: 100%;
+    margin: 0;
 }
 
-h1 {
-    text-transform: uppercase;
-}
-button {
-    padding: 1rem 2rem;
-    transition: .1s ease-in;
-    text-transform: uppercase;
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
-.btn-grande:hover {
-    background-color: rgb(49, 171, 224);
-    border-color: rgb(49, 171, 224);
-    border-width: 4px;
+a {
+    text-decoration: none;
 }
 
-.navbar {
-    background-color: rgb(49, 171, 224);
-    height: 70px;
-    font-family: 'Montserrat', sans-serif;
-    display: flex;
+html,
+body {
+    height: 100%;
 }
 
-.btn-naranja {
-    background-color: #f0634b;
-    border-color: #f0634b;
-    color: white;
-}
-
-.btn-naranja {
-    background-color: #f74c2e;
-    border-color: #f74c2e;
-}
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-.fondoGris {
-    background-color: #f1f1f1;
-    padding: 1.5rem;
-    border-radius: 1rem;
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 mat-form-field {
     width: 100%;
 }
 
-.mensajeValidacion {
-    color: #da2d2d;
+.action {
+    padding: 0 25px 20px;
 }
 
+.action button {
+    flex: 1;
+}
+
+.colorPrincipal {
+    color: #0077be;
+}
+
+.contenedor-tabla {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.mat-table-responsive {
+    overflow-x: auto;
+}
+
+.btn-primary {
+    background-color: rgba(0, 119, 190, 0.8);
+    border-color: rgba(0, 119, 190, 0.8);
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: rgba(0, 107, 161, 0.8);
+    border-color: rgba(0, 107, 161, 0.8);
+}

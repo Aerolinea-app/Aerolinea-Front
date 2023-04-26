@@ -1,11 +1,5 @@
-
-export class Avion {
-    numeroAvion: string;
-    nombreAvion: string;
-    ciudadOrigen: string;
-    ciudadDestino: string;
-    horaSalida: string;
-    horaLlegada: string;
-    minutosVuelo: string;
-    imgAvion: string;
+export interface Avion {
+    id: string;
+    aerolinea: string;
+    estado: string;
 }

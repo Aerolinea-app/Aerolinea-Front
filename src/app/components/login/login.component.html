@@ -1,0 +1,23 @@
+<app-navbar></app-navbar>
+<div class = "contenedor">
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="login-card">
+            <h2 class="login-title">Iniciar sesión</h2>
+            <form>
+                <mat-form-field appearance="fill">
+                    <mat-label>Cedula</mat-label>
+                    <input matInput>
+                </mat-form-field>
+                <mat-form-field appearance="fill">
+                    <mat-label>Contraseña</mat-label>
+                    <input matInput type="password">
+                </mat-form-field>
+                <div class="d-grid gap-2 mb-3">
+                    <button class="btn login-button" type="button">Ingresar</button>
+                </div>
+            </form>
+            <p class="register-link">¿No tienes una cuenta? <a routerLink="/register">Regístrate</a></p>
+        </div>
+    </div>
+</div>
+<app-footer></app-footer>
