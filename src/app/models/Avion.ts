@@ -1,5 +1,5 @@
 export interface Avion {
-    id: string;
-    aerolinea: string;
-    estado: string;
+  id: number; // AV-XXX
+  aerolineaAvion: string;
+  estado: string; // Disponible - No Disponible
 }

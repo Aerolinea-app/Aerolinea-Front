@@ -8,6 +8,7 @@ import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { AvionService } from 'src/app/services/Avion/avion.service';
 import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.component';
 import { AddEditAvionComponent } from './add-edit-avion/add-edit-avion.component';
+import { Avion } from 'src/app/models/Avion';
 
 @Component({
   selector: 'app-adm-aviones',
@@ -16,11 +17,16 @@ import { AddEditAvionComponent } from './add-edit-avion/add-edit-avion.component
 })
 export class AdmAvionesComponent implements OnInit, AfterViewInit {
 
+  aviones: Avion[]
+
   ngOnInit(): void {
     this.getAvionList()
   }
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort
+    if (this.dataSource) {
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    }
   }
 
   announceSortChange(sortState: Sort) {
@@ -47,6 +53,14 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
     'acciones'
   ];
 
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo'
+    } else {
+      return 'Inactivo'
+    }
+  }
+
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -72,16 +86,20 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
   getImageUrl(imagen: File): string {
     return URL.createObjectURL(imagen);
   }
-  
+
   getAvionList() {
-    this._avionService.getAvionList().subscribe({
-      next: (res) => {
-        this.dataSource = new MatTableDataSource(res);
+    this._avionService.getAvionList().subscribe(
+      (data: any[]) => {
+        this.aviones = data;
+        console.log(data); // Imprimir datos recibidos
+        this.dataSource = new MatTableDataSource(this.aviones);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      error: console.log,
-    })
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
@@ -89,6 +107,7 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
       width: '350px',
       data: { mensaje: `¿Está seguro que desea eliminar este avión?` }
     });
+
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -103,7 +122,8 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
     })
   }
 
-  deleteAvion(id: number) {
+  borrarAvion(id: number) {
+
     this.confirmarEliminacion(id, '')
   }
 

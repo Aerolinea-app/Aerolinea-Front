@@ -1,66 +1,64 @@
 <div mat-dialog-title>
-    <h1>{{data ? 'Modificar': 'Añadir'}} Asiento</h1>
+  <h1>{{data ? 'Modificar' : 'Añadir'}} Asiento</h1>
 </div>
 <form [formGroup]="asientoForm" (ngSubmit)="onFormSubmit()">
-    <div mat-dialog-content class="content">
+  <div mat-dialog-content class="content">
+    <div class="row">
 
-        <div class="row">
-            <div class="col">
-                <mat-form-field appearance="outline">
-                    <mat-label>Tipo de Asiento</mat-label>
-                    <mat-select formControlName="idTipoA">
-                        <mat-option *ngFor="let tipo of tiposAsientos"
-                            [value]="tipo.id">{{tipo.descripcion}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Avión</mat-label>
-                    <mat-select formControlName="idAvion" (selectionChange)="onAvionSeleccionado($event)">
-                        <mat-option *ngFor="let avion of aviones" [value]="avion.id"
-                            [disabled]="avion.id === idAvionSeleccionado">{{avion.id}} -
-                            {{avion.aerolinea}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>ID Avión</mat-label>
+        <mat-select formControlName="idAvion">
+          <mat-option *ngFor="let avion of aviones" disabled [value]="avion.idAvion">
+            {{ avion.idAvion }} - {{ avion.aerolineaAvion }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-            </div>
-        </div>
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Tipo Asiento</mat-label>
+          <mat-select formControlName="idTipoa">
+            <mat-option value="Preferencial">Preferencial</mat-option>
+            <mat-option value="Vip">Vip</mat-option>
+            <mat-option value="Turista">Turista</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="asientoForm.get('idTipoa').hasError('required')">Tipo Asiento es requerido</mat-error>
+      </div>
 
-        <div class="row">
-            <mat-form-field appearance="outline">
-                <mat-label>Ubicación</mat-label>
-                <mat-select formControlName="ubicacion">
-                    <mat-option [value]="null">-- Seleccione una ubicación --</mat-option>
-                    <mat-optgroup *ngFor="let fila of opcionesFila" [label]="'Fila ' + fila">
-                        <mat-option *ngFor="let columna of opcionesColumna" [value]="{ fila: fila, columna: columna }"
-                            [disabled]="!opcionesColumna.includes(columna)">
-                            {{ columna }}
-                        </mat-option>
-                    </mat-optgroup>
-                </mat-select>
-            </mat-form-field>
+      <div class="col">
+        <mat-form-field appearance="outline">
+          <mat-label>Ubicacion</mat-label>
+          <mat-select formControlName="ubicacion">
+            <mat-option value="Pasillo">Pasillo</mat-option>
+            <mat-option value="Central">Central</mat-option>
+            <mat-option value="Ventana">Ventana</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-error *ngIf="asientoForm.get('ubicacion').hasError('required')">Ubicacion es requerida</mat-error>
+      </div>
 
+      <mat-form-field appearance="outline">
+        <mat-label>Precio asiento</mat-label>
+        <input matInput type="number" min="0" placeholder="Ej. 200000" formControlName="precio">
+        <mat-error *ngIf="asientoForm.get('precio').hasError('required')">Precio asiento es requerido</mat-error>
+        <mat-error *ngIf="asientoForm.get('precio').hasError('min')">El precio debe ser mayor o igual a 0</mat-error>
+      </mat-form-field>
 
-        </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado">
+          <mat-option value="Activo">Activo</mat-option>
+          <mat-option value="Inactivo">Inactivo</mat-option>
+        </mat-select>
+        <mat-error *ngIf="asientoForm.get('estado').hasError('required')">Estado es requerido</mat-error>
+      </mat-form-field>
 
-        <div class="row">
-            <mat-form-field appearance="outline">
-                <mat-label>Precio</mat-label>
-                <input matInput type="text" formControlName="precio">
-            </mat-form-field>
-        </div>
-
-        <div class="col">
-            <mat-form-field appearance="outline">
-                <mat-label>Estado</mat-label>
-                <mat-select formControlName="estado">
-                    <mat-option value="En curso">En curso</mat-option>
-                    <mat-option value="Disponible">Disponible</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </div>
     </div>
-    <div mat-dialog-actions class="action">
-        <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
-        <button mat-raised-button color="primary" type="submit">{{data ? 'Actualizar': 'Guardar'}}</button>
-    </div>
+  </div>
+  <div mat-dialog-actions class="action">
+    <button mat-raised-button type="button" [mat-dialog-close]="false">Cancel</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!asientoForm.valid">{{data ? 'Actualizar' :
+      'Guardar'}}</button>
+  </div>
 </form>

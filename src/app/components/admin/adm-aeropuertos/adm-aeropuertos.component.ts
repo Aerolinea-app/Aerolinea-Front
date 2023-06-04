@@ -52,6 +52,7 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
     'iata',
     'ubicacion',
     'estado',
+    // 'imagenCiudad',
     'acciones'
   ];
 
@@ -75,6 +76,14 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
 
   getImageUrl(imagen: File): string {
     return URL.createObjectURL(imagen);
+  }
+
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo'
+    } else {
+      return 'Inactivo'
+    }
   }
 
   getAeropuertoList() {

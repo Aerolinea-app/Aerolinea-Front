@@ -1,7 +1,7 @@
 export interface Aeropuerto {
-    id: number;
-    nombre: string;
-    iata: string;
-    ubicacion: string;
-    estado: string;
+  idAeropuerto: number;
+  nombre: string;
+  iata: string;
+  ubicacion: string;
+  estado: 'Disponible' | 'Lleno';
 }

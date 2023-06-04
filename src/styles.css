@@ -42,7 +42,7 @@ mat-form-field {
 }
 
 .contenedor-tabla {
-    max-width: 1200px;
+    max-width: 1350px;
     margin: 0 auto;
 }
 
@@ -60,3 +60,8 @@ mat-form-field {
     background-color: rgba(0, 107, 161, 0.8);
     border-color: rgba(0, 107, 161, 0.8);
 }
+
+body {
+    overflow-x: hidden;
+}
+

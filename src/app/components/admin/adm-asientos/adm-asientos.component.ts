@@ -8,6 +8,7 @@ import { AsientoService } from 'src/app/services/Asiento/asiento.service';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { AddEditAsientoComponent } from './add-edit-asiento/add-edit-asiento.component';
 import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.component';
+import { AvionService } from 'src/app/services/Avion/avion.service';
 
 @Component({
   selector: 'app-adm-asientos',
@@ -20,10 +21,13 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  
+  aviones: any[]
+
 
   displayedColumns: string[] = [
-    'id',
-    'idTipoA',
+    'idAsiento',
+    'idTipoa',
     'idAvion',
     'ubicacion',
     'precio',
@@ -34,18 +38,21 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
   constructor(
     private _dialog: MatDialog,
     private _asientoService: AsientoService,
+    private _avionService: AvionService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
   ) {
 
   }
-  
+
   ngOnInit(): void {
     this.getAsientoList()
+    this.obtenerAviones()
   }
-  
+
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    this.dataSource.sort = this.sort;
+    // this.getAsientoList()
   }
 
   announceSortChange(sortState: Sort) {
@@ -76,6 +83,7 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   getAsientoList() {
     this._asientoService.getAsientoList().subscribe({
       next: (res) => {
@@ -85,6 +93,39 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
       },
       error: console.log,
     })
+  }
+
+  getTipoAsiento(idTipoAsiento: number): string {
+    if (idTipoAsiento === 1) {
+      return 'Preferencial'
+    } else if (idTipoAsiento === 2) {
+      return 'Vip'
+    } else {
+      return 'Turista'
+    }
+  }
+
+  obtenerAviones(): void {
+    this._avionService.getAvionList().subscribe(aviones => {
+      this.aviones = aviones;
+    });
+  }
+
+  getAerolinea(idAvion: number): string {
+    for (let i = 0; i < this.aviones.length; i++) {
+      if (idAvion === this.aviones[i].idAvion) {
+        return this.aviones[i].aerolineaAvion
+      }
+    }
+    return 'no hay aerolinea'
+  }
+
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo'
+    } else {
+      return 'Inactivo'
+    }
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
@@ -118,7 +159,7 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.getAsientoList();
+          // this.getAsientoList();
         }
       }
     });

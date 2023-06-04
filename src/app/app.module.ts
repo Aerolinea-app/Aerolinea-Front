@@ -14,12 +14,11 @@ import { RegisterComponent } from './components/register/register.component';
 import { AngularMaterialModule } from './shared/angular-material/angular-material.module';
 import { FiltradorComponent } from './components/vuelos/filtrador/filtrador.component';
 
-
-import {MatNativeDateModule} from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 import { AdminComponent } from './components/admin/admin.component';
 import { AdmNavbarComponent } from './shared/adm-navbar/adm-navbar.component';
 import { AdmUsuariosComponent } from './components/admin/adm-usuarios/adm-usuarios.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AddEditUsuarioComponent } from './components/admin/adm-usuarios/add-edit-usuario/add-edit-usuario.component';
 import { ConfirmacionComponent } from './shared/confirmacion/confirmacion.component';
 import { AdmAvionesComponent } from './components/admin/adm-aviones/adm-aviones.component';
@@ -32,12 +31,17 @@ import { AddEditAeropuertoComponent } from './components/admin/adm-aeropuertos/a
 import { AdmTrayectosComponent } from './components/admin/adm-trayectos/adm-trayectos.component';
 import { AddEditTrayectoComponent } from './components/admin/adm-trayectos/add-edit-trayecto/add-edit-trayecto.component';
 import { DatePipe } from '@angular/common';
-import { AdmFacturasComponent } from './components/admin/adm-facturas/adm-facturas.component';
-import { AddEditFacturaComponent } from './components/admin/adm-facturas/add-edit-factura/add-edit-factura.component';
 import { AdmTipoasientosComponent } from './components/admin/adm-tipoasientos/adm-tipoasientos.component';
 import { AddEditTipoasientosComponent } from './components/admin/adm-tipoasientos/add-edit-tipoasientos/add-edit-tipoasientos.component';
 import { AdmAsientosComponent } from './components/admin/adm-asientos/adm-asientos.component';
 import { AddEditAsientoComponent } from './components/admin/adm-asientos/add-edit-asiento/add-edit-asiento.component';
+import { DetalleVueloComponent } from './components/detalle-vuelo/detalle-vuelo.component';
+import { ElegirAsientoComponent } from './components/elegir-asiento/elegir-asiento.component';
+import { AdmReservasComponent } from './components/admin/adm-reservas/adm-reservas.component';
+import { AddEditReservaComponent } from './components/admin/adm-reservas/add-edit-reserva/add-edit-reserva.component';
+import { AuthInterceptor } from './auth.interceptor';
+import { SeatDialogComponent } from './components/admin/adm-reservas/seat-dialog/seat-dialog.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,12 +65,15 @@ import { AddEditAsientoComponent } from './components/admin/adm-asientos/add-edi
     AddEditAeropuertoComponent,
     AdmTrayectosComponent,
     AddEditTrayectoComponent,
-    AdmFacturasComponent,
-    AddEditFacturaComponent,
     AdmTipoasientosComponent,
     AddEditTipoasientosComponent,
     AdmAsientosComponent,
     AddEditAsientoComponent,
+    DetalleVueloComponent,
+    ElegirAsientoComponent,
+    AdmReservasComponent,
+    AddEditReservaComponent,
+    SeatDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -77,11 +84,16 @@ import { AddEditAsientoComponent } from './components/admin/adm-asientos/add-edi
     AngularMaterialModule,
     MatNativeDateModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
-    DatePipe
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    DatePipe,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

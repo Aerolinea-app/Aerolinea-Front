@@ -1,164 +1,104 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Avion } from 'src/app/models/Avion';
 import { TipoAsiento } from 'src/app/models/TipoAsiento';
-import { UbicacionAsiento } from 'src/app/models/UbicacionAsiento';
 import { AsientoService } from 'src/app/services/Asiento/asiento.service';
 import { AvionService } from 'src/app/services/Avion/avion.service';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
-import { TipoasientoService } from 'src/app/services/TipoAsiento/tipoasiento.service';
 
 @Component({
   selector: 'app-add-edit-asiento',
   templateUrl: './add-edit-asiento.component.html',
-  styleUrls: ['./add-edit-asiento.component.css']
+  styleUrls: ['./add-edit-asiento.component.css'],
 })
 export class AddEditAsientoComponent implements OnInit {
-
-  today = new Date();
+  asientos: any[];
   asientoForm: FormGroup;
+  aviones: any[];
 
-  tiposAsientos: TipoAsiento[] = [];
-  aviones: Avion[] = [];
-  asientos: any[] = [];
-  idAvionSeleccionado: string;
-  ubicacionesDisponibles: UbicacionAsiento[] = []
-  opcionesFila: number[];
-  opcionesColumna: string[];
+  estado = '';
+  tipoa = '';
 
   ngOnInit(): void {
-    this.asientoForm.patchValue(this.data)
-
-    this._tipoAsientoService.getTipoAsientoList().subscribe((res: any) => {
-      this.tiposAsientos = res;
-    })
-
-    this._avionService.getAvionList().subscribe((res: any) => {
-      this.aviones = res
-    })
-
-    this.getUbicacionesDisponibles();
+    this.asientoForm.patchValue(this.data);
+    this.obtenerAviones();
   }
-
 
   constructor(
     private _fb: FormBuilder,
     private _asientoService: AsientoService,
+    private _avionService: AvionService,
     private _dialogRef: MatDialogRef<AddEditAsientoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _mensajeService: MensajesService,
-    private _tipoAsientoService: TipoasientoService,
-    private _avionService: AvionService,
+    private _mensajeService: MensajesService
   ) {
     this.asientoForm = this._fb.group({
       id: '',
-      idTipoA: '',
-      idAvion: '',
-      ubicacion: this._fb.group({
-        fila: '',
-        columna: ''
-      }),
-      precio: '',
-      estado: ''
+      idTipoa: ['', Validators.required],
+      idAvion: ['', Validators.required],
+      ubicacion: ['', Validators.required],
+      precio: ['', [Validators.required, Validators.min(0)]],
+      estado: ['', Validators.required],
     });
-
-    if (this.data && this.data.id) {
-      // Si estás editando un vuelo existente, extrae el número de vuelo de la cadena "VUE-xxx"
-      const idasiento = this.data.id.substring(3);
-      this.asientoForm.get('id').setValue(`FAC-${idasiento}`);
+    if (this.data && this.data.nombre) {
+      const idAsiento = this.data.idAsiento;
+      const ubicacion = this.data.ubicacion; // Obtén el valor de aerolinea del objeto data
+      this.asientoForm.get('id').setValue(idAsiento); // Establece el valor del campo 'id'
+      this.asientoForm.get('ubicacion').setValue(ubicacion); // Establece el valor del campo 'aerolinea'
       this.asientoForm.patchValue(this.data);
     }
   }
 
-  onAvionSeleccionado(event: any) {
-    this.idAvionSeleccionado = event.value;
-    this._asientoService.getAsientoList().subscribe((res: any) => {
-      this.asientos = res.filter((asiento: any) => asiento.idAvion === this.idAvionSeleccionado);
-      this.getUbicacionesDisponibles();
-      this.actualizarOpcionesUbicacion();
+  obtenerAviones(): void {
+    this._avionService.getAvionList().subscribe((aviones) => {
+      this.aviones = aviones;
     });
   }
-
-  private getUbicacionesDisponibles() {
-    const ubicacionesExistentes = this.asientos.map((asiento: any) => {
-      return asiento.ubicacion;
-    });
-    this.ubicacionesDisponibles = [];
-    for (let i = 0; i < 30; i++) {
-      for (let j = 0; j < 6; j++) {
-        const ubicacion: UbicacionAsiento = {
-          fila: i,
-          columna: String.fromCharCode(65 + j),
-          pasillo: i === 14 ? "D" : (i === 15 ? "I" : "")
-        };
-        if (!ubicacionesExistentes.some((u: any) => u.fila === i && u.columna === ubicacion.columna)) {
-          this.ubicacionesDisponibles.push(ubicacion);
-        }
-      }
-    }
-  }
-
-
-  private actualizarOpcionesUbicacion() {
-    const ubicacionControl = this.asientoForm.get('ubicacion');
-    ubicacionControl.get('fila').setValue('');
-    ubicacionControl.get('columna').setValue('');
-    ubicacionControl.get('fila').enable();
-    ubicacionControl.get('columna').enable();
-    const opcionesFila = Array.from(new Set(this.ubicacionesDisponibles.map((ubicacion: UbicacionAsiento) => ubicacion.fila)));
-    this.opcionesFila = opcionesFila.filter((fila: any) => fila !== '');
-    this.opcionesColumna = [];
-    this.ubicacionesDisponibles.filter((ubicacion: UbicacionAsiento) => ubicacion.fila === opcionesFila[0]).forEach((ubicacion: UbicacionAsiento) => {
-      this.opcionesColumna.push(ubicacion.columna);
-    });
-  }
-
-
-  onFilaSeleccionada(event: any) {
-    const filaSeleccionada = event.value;
-    const ubicacionesOcupadas = this.asientos.filter((asiento: any) => asiento.ubicacion.fila === filaSeleccionada).map((asiento: any) => asiento.ubicacion.columna);
-    const ubicacionesDisponibles = this.ubicacionesDisponibles.filter((ubicacion: UbicacionAsiento) => ubicacion.fila === filaSeleccionada && !ubicacionesOcupadas.includes(ubicacion.columna));
-    this.asientoForm.get('ubicacion.columna').setValue('');
-    this.opcionesColumna = ubicacionesDisponibles.map((ubicacion: UbicacionAsiento) => ubicacion.columna);
-  }
-
 
   onFormSubmit() {
     if (this.asientoForm.valid) {
-      const idAvion = this.asientoForm.get('idAvion').value;
-      const asientoExistente = this.asientos.find((asiento: any) => asiento.idAvion === idAvion);
-      if (asientoExistente && !this.data) {
-        this._mensajeService.openSnackBar('Ya existe un asiento con ese id de avión');
+      this.estado = this.asientoForm.get('estado').value;
+
+      if (this.estado == 'Activo') {
+        this.estado = 'A';
       } else {
-        if (this.data) {
-          this._asientoService.updateAsiento(this.data.id, this.asientoForm.value)
-            .subscribe({
-              next: (val: any) => {
-                this._mensajeService.openSnackBar('asiento actualizado correctamente!')
-                this._dialogRef.close(true);
-                console.log(this.data)
-              },
-              error: (err: any) => {
-                console.log(err)
-              }
-            })
-        } else {
-          this._asientoService.addAsiento(this.asientoForm.value)
-            .subscribe({
-              next: (val: any) => {
-                this._mensajeService.openSnackBar('asiento creado correctamente!')
-                this._dialogRef.close(true);
-              },
-              error: (err: any) => {
-                console.log(err)
-              }
-            })
-        }
+        this.estado = 'I';
+      }
+
+      this.tipoa = this.asientoForm.get('idTipoa').value;
+
+      if (this.tipoa == 'Preferencial') {
+        this.tipoa = '1';
+      } else if (this.tipoa === 'Vip') {
+        this.tipoa = '2';
+      } else {
+        this.tipoa = '3';
+      }
+
+      if (this.data) {
+        const updateAsiento = {
+          idAsiento: this.data.idAsiento.toString(),
+          idTipoa: this.tipoa,
+          idAvion: this.asientoForm.get('idAvion').value,
+          ubicacion: this.asientoForm.get('ubicacion').value,
+          precio: this.asientoForm.get('precio').value,
+          estado: this.estado,
+        };
+        this._asientoService.updateAsiento(updateAsiento).subscribe({
+          next: (val: any) => {
+            this._mensajeService.openSnackBar(
+              'Asiento actualizado correctamente!'
+            );
+            this._dialogRef.close(true);
+            console.log(this.data);
+            window.location.reload(); // Recargar la página
+          },
+          error: (err: any) => {
+            console.log(err);
+          },
+        });
       }
     }
   }
-
-
-
 }

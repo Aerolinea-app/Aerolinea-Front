@@ -1,41 +1,38 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Asiento } from 'src/app/models/Asiento';
 
 @Injectable({
   providedIn: 'root'
 })
 export class VueloService {
 
-  constructor(
-    private _http: HttpClient
-  ) { }
+  constructor(private _http: HttpClient) { }
 
   addVuelo(nuevoVuelo: any): Observable<any> {
-    const id = this.generarNuevoId();
-    nuevoVuelo.id = id;
-    return this._http.post('http://localhost:3000/vuelos', nuevoVuelo);
+    console.log('desde service: ', nuevoVuelo)
+    return this._http.post('http://localhost:8080/vuelo/guardarVuelo', nuevoVuelo);
   }
-
-  updateVuelo(id: number, data: any): Observable<any> {
-    return this._http.put(`http://localhost:3000/vuelos/${id}`, data)
-  }
-
-  getVuelo(id: number): Observable<any> {
-    return this._http.get(`http://localhost:3000/vuelos/${id}`)
-  }
-
 
   getVueloList(): Observable<any> {
-    return this._http.get('http://localhost:3000/vuelos');
+    return this._http.get(`http://localhost:8080/vuelo/obtenerVuelos`);
+  }
+  
+  getVueloActivoList(): Observable<any> {
+    return this._http.get(`http://localhost:8080/vuelo/obtenerVuelosActivos`);
+  }
+  
+  getVuelo(vueloId: number): Observable<any> {
+    return this._http.get(`http://localhost:8080/vuelo/obtenerVuelo/${vueloId}`);;
   }
 
-  deleteVuelo(id: number): Observable<any> {
-    return this._http.delete(`http://localhost:3000/vuelos/${id}`)
+  deleteVuelo(vueloId: number): Observable<any> {
+    return this._http.delete(`http://localhost:8080/vuelo/deleteVuelo/${vueloId}`)
   }
 
-  private generarNuevoId(): string {
-    const numero = Math.floor(Math.random() * 1000) + 1;
-    return `VUE-${numero.toString().padStart(3, '0')}`;
+  updateVuelo(data: any): Observable<any> {
+    return this._http.put(`http://localhost:8080/vuelo/updateVuelo`, data);
   }
 }
+

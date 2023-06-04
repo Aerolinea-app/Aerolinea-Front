@@ -8,29 +8,48 @@ import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
 import { AddEditVueloComponent } from './add-edit-vuelo/add-edit-vuelo.component';
 import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.component';
-import { Aeropuerto } from 'src/app/models/Aeropuerto';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
 
 @Component({
   selector: 'app-adm-vuelos',
   templateUrl: './adm-vuelos.component.html',
-  styleUrls: ['./adm-vuelos.component.css']
+  styleUrls: ['./adm-vuelos.component.css'],
 })
 export class AdmVuelosComponent implements OnInit, AfterViewInit {
-
   dataSource: MatTableDataSource<any>;
-  aeropuertos: Aeropuerto[]
+  aeropuertos: any[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
+
   ngOnInit(): void {
-    this.getVueloList()
-    this.obtenerAeropuertos()
+    this.obtenerAeropuertosActivos();
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
+    if (this.dataSource) {
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    }
+  }
+
+  obtenerAeropuertosActivos(): void {
+    this._aeropuertoService.getAeropuertosActivos().subscribe((aeropuertos) => {
+      this.aeropuertos = aeropuertos;
+      this.getVueloList();
+    });
+  }
+
+  getVueloList() {
+    this._vueloService.getVueloList().subscribe({
+      next: (res) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        console.log(res);
+      },
+      error: console.log,
+    });
   }
 
   announceSortChange(sortState: Sort) {
@@ -39,13 +58,6 @@ export class AdmVuelosComponent implements OnInit, AfterViewInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
-  }
-
-  obtenerAeropuertos(): void {
-    this._aeropuertoService.getAeropuertoList().subscribe(aeropuertos => {
-      console.log(aeropuertos);
-      this.aeropuertos = aeropuertos;
-    });
   }
 
   applyFilter(event: Event) {
@@ -77,60 +89,57 @@ export class AdmVuelosComponent implements OnInit, AfterViewInit {
     private _mensajeService: MensajesService,
     private _aeropuertoService: AeropuertoService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
 
-  getAeropuertoNombre(idAeropuerto: number) {
-    if (!this.aeropuertos) {
-      return '';
+  getAeropuertoNombre(idAeropuerto: number): string {
+    for (let i = 0; i < this.aeropuertos.length; i++) {
+      if (idAeropuerto === this.aeropuertos[i].idAeropuerto) {
+        return this.aeropuertos[i].nombre;
+      }
     }
+    return 'no hay nombres';
+  }
 
-    const aeropuerto = this.aeropuertos.find(r => r.id === idAeropuerto);
-    return aeropuerto ? aeropuerto.nombre : '';
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo';
+    } else {
+      return 'Inactivo';
+    }
   }
 
   openAddEditVueloForm() {
-    const dialogRef = this._dialog.open(AddEditVueloComponent)
+    const dialogRef = this._dialog.open(AddEditVueloComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getVueloList();
         }
-      }
-    });
-  }
-
-  getVueloList() {
-    this._vueloService.getVueloList().subscribe({
-      next: (res) => {
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
       },
-      error: console.log,
-    })
+    });
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar este vuelo?` }
+      data: { mensaje: `¿Está seguro que desea eliminar este vuelo?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._vueloService.deleteVuelo(id).subscribe({
           next: (res) => {
             this._mensajeService.openSnackBar(`El vuelo ha sido eliminado`);
             this.getVueloList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
   deleteVuelo(id: number) {
-    this.confirmarEliminacion(id, '')
+    this.confirmarEliminacion(id, '');
   }
 
   openEditForm(data: any) {
@@ -143,8 +152,7 @@ export class AdmVuelosComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getVueloList();
         }
-      }
+      },
     });
   }
-
 }

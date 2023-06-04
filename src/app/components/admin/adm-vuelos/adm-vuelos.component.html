@@ -19,10 +19,10 @@
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por id"> ID </th>
-                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.idVuelo}} </td>
             </ng-container>
 
-            <!-- ID Column -->
+            <!-- Aeropuerto Origen Column -->
             <ng-container matColumnDef="idAeropuertoOrigen">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     sortActionDescription="Buscar por idAeropuertoOrigen"> Aeropuerto Origen
@@ -30,7 +30,7 @@
                 <td mat-cell *matCellDef="let row"> {{getAeropuertoNombre(row.idAeropuertoOrigen)}} </td>
             </ng-container>
 
-            <!-- ID Column -->
+            <!-- Aeropuerto Destino Column -->
             <ng-container matColumnDef="idAeropuertoDestino">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header
                     sortActionDescription="Buscar por idAeropuertoDestino"> Aeropuerto Destino
@@ -38,73 +38,73 @@
                 <td mat-cell *matCellDef="let row"> {{getAeropuertoNombre(row.idAeropuertoDestino)}} </td>
             </ng-container>
 
-            <!-- Progress Column -->
-            <ng-container matColumnDef="fechaHoraSalida">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Buscar por fechaHoraSalida">
-                    Fecha Salida </th>
-                <td mat-cell *matCellDef="let row"> {{row.fechaHoraSalida | date }} </td>
-            </ng-container>
-
-            <!-- Progress Column -->
-            <ng-container matColumnDef="fechaHoraLlegada">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Buscar por fechaHoraLlegada">
-                    Fecha Llegada </th>
-                <td mat-cell *matCellDef="let row"> {{row.fechaHoraLlegada | date}} </td>
-            </ng-container>
-
-
-            <!-- Progress Column -->
+            <!-- Precio Vuelo Column -->
             <ng-container matColumnDef="precio">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por precio">
                     Precio Vuelo </th>
                 <td mat-cell *matCellDef="let row"> {{row.precio | currency: 'COP '}} </td>
             </ng-container>
 
-            <!-- Progress Column -->
+
+            <!-- Fecha Salida Column -->
+            <ng-container matColumnDef="fechaHoraSalida">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    sortActionDescription="Buscar por fechaHoraSalida">
+                    Fecha Salida </th>
+                <td mat-cell *matCellDef="let row"> {{row.fechaHoraSalida | date: 'MMM d, y, h:mm a'}} </td>
+            </ng-container>
+
+            <!-- Fecha Llegada Column -->
+            <ng-container matColumnDef="fechaHoraLlegada">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header
+                    sortActionDescription="Buscar por fechaHoraLlegada">
+                    Fecha Llegada </th>
+                <td mat-cell *matCellDef="let row"> {{row.fechaHoraLlegada | date: 'MMM d, y, h:mm a'}}
+                </td>
+            </ng-container>
+
+            <!-- Precio Vuelo Column -->
             <ng-container matColumnDef="precioAsientoPreferencial">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Buscar por precioAsientoPreferencial">
-                    Asiento Preferencial </th>
-                <td mat-cell *matCellDef="let row"> {{row.precioAsientoPreferencial | currency:'COP '}} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por precioAsientoPreferencial">
+                    Precio Preferencial </th>
+                <td mat-cell *matCellDef="let row"> {{row.precioAsientoPreferencial | currency: 'COP '}} </td>
             </ng-container>
 
-            <!-- Progress Column -->
+            <!-- Precio Vuelo Column -->
             <ng-container matColumnDef="precioAsientoVip">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Buscar por precioAsientoVip">
-                    Asiento Vip </th>
-                <td mat-cell *matCellDef="let row"> {{row.precioAsientoVip | currency:'COP '}} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por precioAsientoVip">
+                    Precio VIP </th>
+                <td mat-cell *matCellDef="let row"> {{row.precioAsientoVip | currency: 'COP '}} </td>
             </ng-container>
 
-            <!-- Progress Column -->
-            <ng-container matColumnDef="precioAsientoTurista">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Buscar por precioAsientoTurista">
-                    Asiento Turista </th>
-                <td mat-cell *matCellDef="let row"> {{row.precioAsientoTurista | currency:'COP '}} </td>
+            
+             <!-- Precio Vuelo Column -->
+             <ng-container matColumnDef="precioAsientoTurista">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por precioAsientoTurista">
+                    Precio Turista </th>
+                <td mat-cell *matCellDef="let row"> {{row.precioAsientoTurista | currency: 'COP '}} </td>
             </ng-container>
-
-            <!-- Progress Column -->
+            
+            <!-- Estado Column -->
             <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                    sortActionDescription="Buscar por estado">
-                    estado </th>
-                <td mat-cell *matCellDef="let row"> {{row.estado}} </td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por estado">
+                    Estado </th>
+                <td mat-cell *matCellDef="let row"> {{getEstado(row.estado)}} </td>
             </ng-container>
 
+            <!-- Acciones Column -->
             <ng-container matColumnDef="acciones">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
                 <td mat-cell *matCellDef="let row">
                     <button mat-icon-button color="primary" (click)="openEditForm(row)" style="color: #0077be;">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteVuelo(row.id)">
+                    <button mat-icon-button color="warn" (click)="deleteVuelo(row.idVuelo)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
             </ng-container>
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
@@ -116,7 +116,7 @@
 
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
     </div>
-
 </div>
+
 
 <app-footer></app-footer>

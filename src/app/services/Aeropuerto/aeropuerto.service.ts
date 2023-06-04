@@ -12,30 +12,22 @@ export class AeropuertoService {
   ) { }
 
   addAeropuerto(nuevoAeropuerto: any): Observable<any> {
-    const id = this.generarNuevoId();
-    nuevoAeropuerto.id = id;
-    return this._http.post('http://localhost:3000/aeropuerto', nuevoAeropuerto);
+    return this._http.post('http://localhost:8080/aeropuerto/agregarAeropuerto', nuevoAeropuerto);
   }
 
-  updateAeropuerto(id: number, data: any): Observable<any> {
-    return this._http.put(`http://localhost:3000/aeropuerto/${id}`, data)
+  updateAeropuerto(updateAeropuerto: any): Observable<any> {
+    return this._http.put(`http://localhost:8080/aeropuerto/updateAeropuerto`, updateAeropuerto)
   }
-
-  getAeropuerto(id: number): Observable<any> {
-    return this._http.get(`http://localhost:3000/aeropuerto/${id}`)
-  }
-
 
   getAeropuertoList(): Observable<any> {
-    return this._http.get('http://localhost:3000/aeropuerto');
+    return this._http.get(`http://localhost:8080/aeropuerto/obtenerAeropuertos`);
+  }
+  
+  getAeropuertosActivos(): Observable<any> {
+    return this._http.get(`http://localhost:8080/aeropuerto/obtenerAeropuertosActivos`);
   }
 
   deleteAeropuerto(id: number): Observable<any> {
-    return this._http.delete(`http://localhost:3000/aeropuerto/${id}`)
-  }
-
-  private generarNuevoId(): string {
-    const numero = Math.floor(Math.random() * 1000) + 1;
-    return `AE-${numero.toString().padStart(3, '0')}`;
+    return this._http.delete(`http://localhost:8080/aeropuerto/deleteAeropuerto/${id}`)
   }
 }

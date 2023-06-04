@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdmFacturasComponent } from './adm-facturas.component';
+import { AddEditReservaComponent } from './add-edit-reserva.component';
 
-describe('AdmFacturasComponent', () => {
-  let component: AdmFacturasComponent;
-  let fixture: ComponentFixture<AdmFacturasComponent>;
+describe('AddEditReservaComponent', () => {
+  let component: AddEditReservaComponent;
+  let fixture: ComponentFixture<AddEditReservaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AdmFacturasComponent ]
+      declarations: [ AddEditReservaComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdmFacturasComponent);
+    fixture = TestBed.createComponent(AddEditReservaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

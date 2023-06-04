@@ -63,6 +63,8 @@ export class AddEditTrayectoComponent {
     this.getVuelosDisponibles();
     this.getAvionesDisponibles();
 
+    // this.trayectoForm.get('idVuelo').setValue(this.data.idVuelo);
+
     this.trayectoForm.get('idVuelo').valueChanges.subscribe((value) => {
       this.selectedVuelo = value;
       this.trayectoForm.get('idAeropuertoDestino').setValue(value?.idAeropuertoDestino);
@@ -80,6 +82,7 @@ export class AddEditTrayectoComponent {
       }
     });
   }
+
 
   getVuelosDisponibles() {
     this._vueloService.getVueloList().subscribe((data) => {
@@ -108,6 +111,7 @@ export class AddEditTrayectoComponent {
         horaLlegada: this.trayectoForm.get('horaLlegada').value,
         estado: this.trayectoForm.get('estado').value,
       };
+
       if (this.data && this.data.id) {
         const updatedTrayecto = Object.assign({}, this.data, newTrayecto);
         this._trayectoService.updateTrayecto(this.data.id, updatedTrayecto).subscribe((result) => {

@@ -18,21 +18,21 @@
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por id"> ID </th>
-                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.idAvion}} </td>
             </ng-container>
 
             <!-- Progress Column -->
             <ng-container matColumnDef="aerolinea">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por aerolinea">
                     Aerolinea </th>
-                <td mat-cell *matCellDef="let row"> {{row.aerolinea}} </td>
+                <td mat-cell *matCellDef="let row"> {{row.aerolineaAvion}} </td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="estado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Buscar por estado">
                     Estado </th>
-                <td mat-cell *matCellDef="let row"> {{row.estado}} </td>
+                <td mat-cell *matCellDef="let row"> {{getEstado(row.estado)}} </td>
             </ng-container>
 
             <ng-container matColumnDef="acciones">
@@ -41,7 +41,7 @@
                     <button mat-icon-button color="primary" (click)="openEditForm(row)" style="color: #0077be;">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="deleteAvion(row.id)">
+                    <button mat-icon-button color="warn" (click)="borrarAvion(row.idAvion)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
