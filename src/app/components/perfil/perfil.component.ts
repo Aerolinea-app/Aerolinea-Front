@@ -6,6 +6,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
 import { AsientoService } from 'src/app/services/Asiento/asiento.service';
+import { AvionService } from 'src/app/services/Avion/avion.service';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { ReservaService } from 'src/app/services/Reserva/reserva.service';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
@@ -20,6 +21,7 @@ export class PerfilComponent implements OnInit {
   reservas: any[];
   vuelos: any[];
   aeropuertos: any[];
+  aviones: any[];
   asientos: any[];
   tipoa = 0;
   avion = 0;
@@ -29,6 +31,7 @@ export class PerfilComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'idVuelo',
+    'idAvion',
     'idAsiento',
     'precioTotal',
     'estadoPago',
@@ -44,6 +47,7 @@ export class PerfilComponent implements OnInit {
     private _reservaService: ReservaService,
     private _asientoService: AsientoService,
     private _mensajeService: MensajesService,
+    private _avionService: AvionService,
     private _aeropuertoService: AeropuertoService,
     private _vueloService: VueloService
   ) {}
@@ -53,6 +57,7 @@ export class PerfilComponent implements OnInit {
     this.getAeropuertos();
     this.obtenerVuelos();
     this.obtenerAsientos();
+    this.getAvionesActivos()
   }
 
   getEstadoPago(estado: string): string {
@@ -125,6 +130,30 @@ export class PerfilComponent implements OnInit {
       }
     }
     return 'no hay nombres';
+  }
+
+  getAerolinea(idAsiento: number): string {
+    for (let i = 0; i < this.asientos.length; i++) {
+      if (idAsiento === this.asientos[i].idAsiento) {
+        for (let j = 0; j < this.aviones.length; j++) {
+          if (this.asientos[i].idAvion === this.aviones[j].idAvion) {
+            return this.aviones[j].aerolineaAvion;
+          }
+        }
+      }
+    }
+    return 'no hay nombres';
+  }
+
+  getAvionesActivos() {
+    this._avionService.getAvionActivoList().subscribe(
+      (aviones: any[]) => {
+        this.aviones = aviones;
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
 
   ngAfterViewInit(): void {

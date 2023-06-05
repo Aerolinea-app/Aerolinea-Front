@@ -34,3 +34,7 @@
 .login-button:hover {
     background-color: #005daa;
 }
+
+.contenedor {
+  min-height: 70vh;
+}

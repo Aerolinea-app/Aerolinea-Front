@@ -33,12 +33,13 @@ import { AddEditTipoasientosComponent } from './components/admin/adm-tipoasiento
 import { AdmAsientosComponent } from './components/admin/adm-asientos/adm-asientos.component';
 import { AddEditAsientoComponent } from './components/admin/adm-asientos/add-edit-asiento/add-edit-asiento.component';
 import { DetalleVueloComponent } from './components/detalle-vuelo/detalle-vuelo.component';
-import { ElegirAsientoComponent } from './components/elegir-asiento/elegir-asiento.component';
 import { AdmReservasComponent } from './components/admin/adm-reservas/adm-reservas.component';
 import { AddEditReservaComponent } from './components/admin/adm-reservas/add-edit-reserva/add-edit-reserva.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { SeatDialogComponent } from './components/admin/adm-reservas/seat-dialog/seat-dialog.component';
 import { PerfilComponent } from './components/perfil/perfil.component';
+import { ElegirAsientoVueloComponent } from './components/detalle-vuelo/elegir-asiento-vuelo/elegir-asiento-vuelo.component';
+import { AddReservaComponent } from './components/detalle-vuelo/add-reserva/add-reserva.component';
 
 @NgModule({
   declarations: [
@@ -64,12 +65,13 @@ import { PerfilComponent } from './components/perfil/perfil.component';
     AddEditTipoasientosComponent,
     AdmAsientosComponent,
     AddEditAsientoComponent,
+    ElegirAsientoVueloComponent,
     DetalleVueloComponent,
-    ElegirAsientoComponent,
     AdmReservasComponent,
     AddEditReservaComponent,
     SeatDialogComponent,
     PerfilComponent,
+    AddReservaComponent
   ],
   imports: [
     BrowserModule,

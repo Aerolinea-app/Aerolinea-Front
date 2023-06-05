@@ -1,37 +1,27 @@
-import { Component, Inject } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialog,
-} from '@angular/material/dialog';
-import { Vuelo } from 'src/app/models/Vuelo';
+import { Component, OnInit, Inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
+import { AsientoService } from 'src/app/services/Asiento/asiento.service';
 import { AvionService } from 'src/app/services/Avion/avion.service';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { ReservaService } from 'src/app/services/Reserva/reserva.service';
 import { UsuarioService } from 'src/app/services/Usuarios/usuario.service';
+import { ElegirAsientoVueloComponent } from '../elegir-asiento-vuelo/elegir-asiento-vuelo.component';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
-import { SeatDialogComponent } from '../seat-dialog/seat-dialog.component';
-import { AsientoService } from 'src/app/services/Asiento/asiento.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-add-edit-reserva',
-  templateUrl: './add-edit-reserva.component.html',
-  styleUrls: ['./add-edit-reserva.component.css'],
+  selector: 'app-add-reserva',
+  templateUrl: './add-reserva.component.html',
+  styleUrls: ['./add-reserva.component.css']
 })
-export class AddEditReservaComponent {
+export class AddReservaComponent implements OnInit {
   vuelos: any[];
   aviones: any[];
-  aeropuertos: any[];
-  usuarios: any[];
   reservas: any[];
   asientos: any[];
+
 
   disponible = false;
 
@@ -39,7 +29,6 @@ export class AddEditReservaComponent {
 
   selectedSeat: string = '';
 
-  estado = '';
   estadoPago = '';
   ubicacion = '';
   idAsientoReciente = '';
@@ -47,30 +36,29 @@ export class AddEditReservaComponent {
 
   precioAsiento = 0;
 
-  usuarioSeleccionado: Vuelo;
-  vueloSeleccionado: Vuelo;
+  usuarioSeleccionado: any;
+  vueloSeleccionado: any;
   reservaForm: FormGroup;
+
 
   constructor(
     private _fb: FormBuilder,
     private _reservaService: ReservaService,
+    private _vueloService: VueloService,
+    private _router: Router,
     private _asientoService: AsientoService,
-    private _dialogRef: MatDialogRef<AddEditReservaComponent>,
+    private _dialogRef: MatDialogRef<AddReservaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _mensajeService: MensajesService,
-    private _vueloService: VueloService,
     private _aeropuertoService: AeropuertoService,
     private _avionService: AvionService,
     private _usuarioService: UsuarioService,
     private dialog: MatDialog
   ) {
     this.reservaForm = this._fb.group({
-      idVuelo: ['', Validators.required],
       idAvion: ['', Validators.required],
-      idUsuario: ['', Validators.required],
       ubicacion: ['', Validators.required],
       estadoPago: ['', Validators.required],
-      estado: ['', Validators.required],
     });
     if (this.data && this.data.id) {
       const idReserva = this.data.idReserva;
@@ -107,20 +95,15 @@ export class AddEditReservaComponent {
   ngOnInit(): void {
     this.reservaForm.patchValue(this.data);
 
+    this.getVuelos()
     this.getReservas();
     this.getAsientos();
-    this.getVuelosActivos();
-    this.getAeropuertos();
-    this.getUsuariosActivos();
     this.getAvionesActivos();
   }
 
   getAsientosDisponibles(ubicacion: string): boolean {
     for (let i = 0; i < this.reservas.length; i++) {
-      if (
-        this.reservaForm.get('idVuelo').value.idVuelo ===
-        this.reservas[i].idVuelo
-      ) {
+      if (this.data.vueloId === this.reservas[i].idVuelo) {
         for (let j = 0; j < this.asientos.length; j++) {
           if (this.asientos[j].idAsiento === this.reservas[i].idAsiento) {
             for(let k = 0; k < this.aviones.length; k++) {
@@ -137,6 +120,17 @@ export class AddEditReservaComponent {
       }
     }
     return false;
+  }
+
+  getVuelos() {
+    this._vueloService.getVueloActivoList().subscribe(
+      (vuelos: any[]) => {
+        this.vuelos = vuelos;
+      },
+      (error: any) => {
+        console.log(error);
+      }
+    );
   }
 
   getReservas() {
@@ -161,10 +155,11 @@ export class AddEditReservaComponent {
     );
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(SeatDialogComponent, {
+  openDialog(vueloId: number): void {
+
+    const dialogRef = this.dialog.open(ElegirAsientoVueloComponent, {
       width: '900px',
-      data: { selectedSeat: this.selectedSeat },
+      data: { vueloId: vueloId, selectedSeat: this.selectedSeat },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -173,17 +168,6 @@ export class AddEditReservaComponent {
         this.reservaForm.get('ubicacion').setValue(this.selectedSeat);
       }
     });
-  }
-
-  getVuelosActivos() {
-    this._vueloService.getVueloActivoList().subscribe(
-      (vuelos: Vuelo[]) => {
-        this.vuelos = vuelos;
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
   }
 
   getAvionesActivos() {
@@ -197,51 +181,6 @@ export class AddEditReservaComponent {
     );
   }
 
-  getAeropuertos() {
-    this._aeropuertoService.getAeropuertoList().subscribe(
-      (aeropuertos: any[]) => {
-        this.aeropuertos = aeropuertos;
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
-  }
-
-  getUsuariosActivos() {
-    this._usuarioService.getUsuarioActivoList().subscribe(
-      (usuarios: any[]) => {
-        this.usuarios = usuarios;
-      },
-      (error: any) => {
-        console.log(error);
-      }
-    );
-  }
-
-  getAeropuertoNombre(idAeropuerto: number): string {
-    for (let i = 0; i < this.aeropuertos.length; i++) {
-      if (idAeropuerto === this.aeropuertos[i].idAeropuerto) {
-        return this.aeropuertos[i].ubicacion;
-      }
-    }
-    return 'no hay nombres';
-  }
-
-  getUsuarioNombre(idUsuario: number): string {
-    for (let i = 0; i < this.usuarios.length; i++) {
-      if (idUsuario === this.usuarios[i].idUsuario) {
-        return (
-          +this.usuarios[i].cedula +
-          ' - ' +
-          this.usuarios[i].nombre +
-          ' ' +
-          this.usuarios[i].apellido
-        );
-      }
-    }
-    return 'no hay nombres';
-  }
 
   getPrecioAsiento(idVuelo: number, ubicacion: string) {
     for (let i = 0; i < this.vuelos.length; i++) {
@@ -280,17 +219,10 @@ export class AddEditReservaComponent {
 
   onFormSubmit() {
     if (this.reservaForm.valid) {
-      this.estado = this.reservaForm.get('estado').value;
-
-      if (this.estado === 'Activo') {
-        this.estado = 'A';
-      } else {
-        this.estado = 'I';
-      }
 
       this.estadoPago = this.reservaForm.get('estadoPago').value;
 
-      if (this.estadoPago === 'Pagado') {
+      if (this.estadoPago === 'Realizar pago') {
         this.estadoPago = 'P';
       } else {
         this.estadoPago = 'E';
@@ -308,10 +240,7 @@ export class AddEditReservaComponent {
         this.ubicacion = '3';
       }
 
-      this.precioAsiento = this.getPrecioAsiento(
-        this.reservaForm.get('idVuelo').value.idVuelo,
-        this.ubicacion
-      );
+      this.precioAsiento = this.getPrecioAsiento(this.data.vueloId, this.ubicacion);
 
       const newAsiento = {
         idAsiento: '1000',
@@ -319,37 +248,37 @@ export class AddEditReservaComponent {
         idAvion: this.reservaForm.get('idAvion').value,
         ubicacion: this.reservaForm.get('ubicacion').value,
         precio: this.precioAsiento,
-        estado: this.estado,
+        estado: 'A',
       };
 
       this._asientoService.addAsiento(newAsiento).subscribe({
         next: (val: any) => {
           this.idAsientoReciente = val.idAsiento;
 
-          this.precioTotal = this.getPrecioTotal(
-            this.reservaForm.get('idVuelo').value.idVuelo,
-            this.ubicacion
-          );
+          this.precioTotal = this.getPrecioTotal(this.data.vueloId, this.ubicacion);
 
           const currentDate = new Date();
           const formattedDate = currentDate.toISOString();
           this.fechaActual = formattedDate;
 
+
+          const usuario = JSON.parse(localStorage.getItem('usuario'));
+
           const newReserva = {
             idReserva: '1000',
-            idVuelo: this.reservaForm.get('idVuelo').value.idVuelo,
+            idVuelo: this.data.vueloId,
             idAsiento: this.idAsientoReciente,
-            idUsuario: this.reservaForm.get('idUsuario').value,
+            idUsuario: usuario.id,
             precioTotal: this.precioTotal,
             fecha: this.fechaActual,
             estadoPago: this.estadoPago,
-            estado: this.estado,
+            estado: 'A',
           };
 
           this._reservaService.addReserva(newReserva).subscribe({
             next: (val: any) => {
               this._mensajeService.openSnackBar(
-                'Reserva creada correctamente!'
+                'Reserva añadida correctamente!'
               );
               this._dialogRef.close(true);
             },
@@ -357,7 +286,7 @@ export class AddEditReservaComponent {
               console.log(err);
             },
           });
-          window.location.reload();
+          this._router.navigate(['/perfil'])
         },
         error: (err: any) => {
           console.log(err);
@@ -367,4 +296,5 @@ export class AddEditReservaComponent {
       //location.reload();
     }
   }
+
 }

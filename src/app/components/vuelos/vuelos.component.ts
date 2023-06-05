@@ -38,7 +38,7 @@ export class VuelosComponent implements OnInit {
   }
 
   getImagen() {
-    const randomNumber = this.getRandomNumber(0, 9);
+    const randomNumber = this.getRandomNumber(0, 16);
     const rutaImagen = jsonFile.vuelos[randomNumber].ruta;
     return rutaImagen;
   }

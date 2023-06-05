@@ -12,7 +12,7 @@
                 <mat-error *ngIf="usuarioForm.get('cedula').hasError('required')">Cedula es requerida</mat-error>
                 <mat-error *ngIf="usuarioForm.get('cedula').hasError('pattern')">Cedula debe contener 10 dígitos
                     numéricos</mat-error>
-                <mat-error *ngIf="usuarioForm.get('cedula').hasError('asyncCedulaExists')">La cédula ya está
+                <mat-error *ngIf="usuarioForm.get('cedula').hasError('validarCedula')">La cédula ya está
                     registrada</mat-error>
             </mat-form-field>
 

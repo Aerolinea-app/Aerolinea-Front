@@ -27,22 +27,10 @@ export class RegisterComponent implements OnInit {
     private _mensajeService: MensajesService
   ) {
     this.registrationForm = this._formBuilder.group({
-      cedula: ['', [Validators.required, Validators.pattern('[0-9]{10}')]],
-      nombre: [
-        '',
-        [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*')],
-      ],
-      apellido: [
-        '',
-        [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*')],
-      ],
-      correo: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}'),
-        ],
-      ],
+      cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      nombre: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+      apellido: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+      correo: ['', [Validators.required, Validators.pattern('^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$')]],
     });
 
     const cedulaControl = this.registrationForm.get('cedula') as FormControl;
@@ -72,7 +60,7 @@ export class RegisterComponent implements OnInit {
       return { cedulaNoDisponible: true };
     }
 
-    return null; // Retorna null si el asiento está disponible
+    return null;
   }
 
   getCedulas(cedula: string): boolean {
@@ -102,6 +90,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error: (err: any) => {
+          this._mensajeService.openSnackBar(err.error.mensaje)
           console.log(err);
         },
       });

@@ -12,7 +12,6 @@ import { AdmAeropuertosComponent } from './components/admin/adm-aeropuertos/adm-
 import { AdmTipoasientosComponent } from './components/admin/adm-tipoasientos/adm-tipoasientos.component';
 import { AdmAsientosComponent } from './components/admin/adm-asientos/adm-asientos.component';
 import { DetalleVueloComponent } from './components/detalle-vuelo/detalle-vuelo.component';
-import { ElegirAsientoComponent } from './components/elegir-asiento/elegir-asiento.component';
 import { AdmReservasComponent } from './components/admin/adm-reservas/adm-reservas.component';
 import { AuthGuard } from './services/AuthGuard/auth-guard.service';
 import { PerfilComponent } from './components/perfil/perfil.component';
@@ -22,7 +21,6 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'vuelos', component: VuelosComponent },
   { path: 'detalle-vuelo/:id', component: DetalleVueloComponent },
-  { path: 'elegir-asiento/:id', component: ElegirAsientoComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'admin', component: AdminComponent },

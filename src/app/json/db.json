@@ -30,5 +30,34 @@
     {
       "ruta": "../assets/img/vuelo10.jpg"
     }
+    ,
+    {
+      "ruta": "../assets/img/vuelo11.jpg"
+    }
+    ,
+    {
+      "ruta": "../assets/img/vuelo12.jpg"
+    }
+    ,
+    {
+      "ruta": "../assets/img/vuelo13.jpg"
+    }
+    ,
+    {
+      "ruta": "../assets/img/vuelo14.jpg"
+    }
+    ,
+    {
+      "ruta": "../assets/img/vuelo15.jpg"
+    }
+    ,
+    {
+      "ruta": "../assets/img/vuelo16.jpg"
+    }
+    ,
+    {
+      "ruta": "../assets/img/vuelo17.jpg"
+    }
+
   ]
 }

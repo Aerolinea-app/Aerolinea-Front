@@ -15,8 +15,9 @@ export class AddEditUsuarioComponent implements OnInit {
   usuarioForm: FormGroup;
 
   rol = ''
+  disponible = false
 
-
+  usuarios: any[]
   estado = ''
 
   constructor(
@@ -36,6 +37,15 @@ export class AddEditUsuarioComponent implements OnInit {
       estado: ['', Validators.required]
     });
 
+    const cedulaControl = this.usuarioForm.get('cedula') as FormControl;
+
+    this.usuarioForm
+      .get('cedula')
+      .setValidators([
+        Validators.required,
+        (control) => this.validarCedula(cedulaControl),
+      ]);
+
     if (this.data && this.data.nombre) {
       const cedula = this.data.cedula;
       const nombreUsuario = this.data.nombre; // Obtén el valor de aerolinea del objeto data
@@ -43,10 +53,38 @@ export class AddEditUsuarioComponent implements OnInit {
       this.usuarioForm.get('nombre').setValue(nombreUsuario); // Establece el valor del campo 'aerolinea'
       this.usuarioForm.patchValue(this.data);
     }
+
+
+  }
+
+  validarCedula(control: FormControl): { [key: string]: any } | null {
+    this.disponible = this.getCedulas(control.value);
+
+    if (this.disponible === true) {
+      return { cedulaNoDisponible: true };
+    }
+
+    return null;
+  }
+
+  getCedulas(cedula: string): boolean {
+    for (let i = 0; i < this.usuarios.length; i++) {
+      if (cedula === this.usuarios[i].cedula) {
+        return true;
+      }
+    }
+    return false;
   }
 
   ngOnInit(): void {
     this.usuarioForm.patchValue(this.data)
+    this.getUsuarios();
+  }
+
+  getUsuarios(): void {
+    this._usuarioService.getUsuarioList().subscribe((usuarios) => {
+      this.usuarios = usuarios;
+    });
   }
 
   capitalizeWords(value: string): string {
@@ -136,10 +174,13 @@ export class AddEditUsuarioComponent implements OnInit {
         this._usuarioService.addUsuario(newUsuario).subscribe({
           next: (val: any) => {
             this._mensajeService.openSnackBar('Usuario actualizado correctamente!')
+
             this._dialogRef.close(true);
           },
           error: (err: any) => {
             console.log(err)
+            this._mensajeService.openSnackBar(err.error.mensaje)
+
           }
         })
       }

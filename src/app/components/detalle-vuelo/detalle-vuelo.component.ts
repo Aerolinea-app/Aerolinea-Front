@@ -4,6 +4,9 @@ import { Aeropuerto } from 'src/app/models/Aeropuerto';
 import { Vuelo } from 'src/app/models/Vuelo';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ElegirAsientoVueloComponent } from './elegir-asiento-vuelo/elegir-asiento-vuelo.component';
+import { AddReservaComponent } from './add-reserva/add-reserva.component';
 
 @Component({
   selector: 'app-detalle-vuelo',
@@ -13,11 +16,16 @@ import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
 export class DetalleVueloComponent implements OnInit {
   vuelo: any;
   aeropuertos: any[];
+  selectedSeat: string = '';
+
+  id = ''
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private vueloService: VueloService,
-    private aeropuertoService: AeropuertoService
+    private aeropuertoService: AeropuertoService,
+    private dialog: MatDialog,
   ) {
     this.activatedRoute.paramMap.subscribe((params) => {
       const vueloId = params.get('id');
@@ -28,14 +36,31 @@ export class DetalleVueloComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
+
+  openDialog(vueloId: number): void {
+
+
+    if (localStorage.getItem('usuario')) {
+      const dialogRef = this.dialog.open(AddReservaComponent, {
+        width: '900px',
+        data: { vueloId: vueloId, selectedSeat: this.selectedSeat },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.selectedSeat = result;
+        }
+      });
+    } else {
+      window.location.href = '../login';
+    }
+
+  }
 
   getVuelo(vueloId: number): void {
     this.vueloService.getVuelo(vueloId).subscribe((vuelo) => {
-      console.log('Hola');
-
       this.vuelo = vuelo;
-      console.log('vuelo', this.vuelo);
     });
   }
 

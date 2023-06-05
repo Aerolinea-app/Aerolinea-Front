@@ -101,10 +101,7 @@ export class LoginComponent implements OnInit {
       const cedula = this.loginForm.get('cedula').value;
 
       for (let i = 0; i < this.usuarios.length; i++) {
-        if (
-          correo === this.usuarios[i].correo &&
-          cedula === this.usuarios[i].cedula
-        ) {
+        if (correo === this.usuarios[i].correo && cedula === this.usuarios[i].cedula) {
           if (this.usuarios[i].idRolusuario === 1) {
             const usuario = {
               id: this.usuarios[i].idUsuario,
@@ -134,8 +131,12 @@ export class LoginComponent implements OnInit {
             window.location.href = '/vuelos';
             i = this.usuarios.length + 1;
           }
+        } else {
+          this._mensajeService.openSnackBar('¡Credenciales incorrectas!');
         }
       }
     }
   }
+
+
 }

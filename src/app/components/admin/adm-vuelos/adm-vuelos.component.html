@@ -5,7 +5,7 @@
     <button class="btn btn-success btn-lg" (click)="openAddEditVueloForm()">Añadir Vuelo</button>
   </div>
 </div>
-<div class="contenedor-tabla mt-4">
+<div class="contenedor-tabla mb-4 mt-4">
   <mat-form-field>
     <mat-label>Buscar por...</mat-label>
     <input matInput (keyup)="applyFilter($event)"
@@ -115,6 +115,3 @@
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
   </div>
 </div>
-
-
-<app-footer></app-footer>
