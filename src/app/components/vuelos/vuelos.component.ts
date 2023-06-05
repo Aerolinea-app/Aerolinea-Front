@@ -4,6 +4,7 @@ import { Aeropuerto } from 'src/app/models/Aeropuerto';
 import { Vuelo } from 'src/app/models/Vuelo';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
+import jsonFile from '../../json/db.json';
 
 @Component({
   selector: 'app-vuelos',
@@ -12,7 +13,7 @@ import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
 })
 export class VuelosComponent implements OnInit {
   aeropuertos: Aeropuerto[] = [];
-  vuelos: Vuelo[] = [];
+  vuelos: any[] = [];
 
   constructor(
     private _vueloService: VueloService,
@@ -21,7 +22,7 @@ export class VuelosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._vueloService.getVueloActivoList().subscribe((vuelos: Vuelo[]) => {
+    this._vueloService.getVueloActivoList().subscribe((vuelos: any[]) => {
       this.vuelos = vuelos;
     });
 
@@ -30,6 +31,16 @@ export class VuelosComponent implements OnInit {
       .subscribe((aeropuertos: Aeropuerto[]) => {
         this.aeropuertos = aeropuertos;
       });
+  }
+
+  getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  getImagen() {
+    const randomNumber = this.getRandomNumber(0, 9);
+    const rutaImagen = jsonFile.vuelos[randomNumber].ruta;
+    return rutaImagen;
   }
 
   getUbicacionAeropuerto(idAeropuerto: number) {

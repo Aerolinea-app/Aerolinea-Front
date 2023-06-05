@@ -318,7 +318,6 @@ export class AddEditReservaComponent {
 
       this._asientoService.addAsiento(newAsiento).subscribe({
         next: (val: any) => {
-          
           this.idAsientoReciente = val.idAsiento;
 
           this.precioTotal = this.getPrecioTotal(
@@ -352,6 +351,7 @@ export class AddEditReservaComponent {
               console.log(err);
             },
           });
+          window.location.reload();
         },
         error: (err: any) => {
           console.log(err);

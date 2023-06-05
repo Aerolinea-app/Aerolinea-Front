@@ -1,6 +1,6 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogConfig  } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,12 +16,11 @@ import { UsuarioService } from 'src/app/services/Usuarios/usuario.service';
 @Component({
   selector: 'app-adm-reservas',
   templateUrl: './adm-reservas.component.html',
-  styleUrls: ['./adm-reservas.component.css']
+  styleUrls: ['./adm-reservas.component.css'],
 })
 export class AdmReservasComponent implements OnInit, AfterViewInit {
-
-  asientos: any[]
-  usuarios: any[]
+  asientos: any[];
+  usuarios: any[];
 
   constructor(
     private _dialog: MatDialog,
@@ -31,7 +30,7 @@ export class AdmReservasComponent implements OnInit, AfterViewInit {
     private _usuarioService: UsuarioService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
 
   displayedColumns: string[] = [
     'id',
@@ -46,16 +45,24 @@ export class AdmReservasComponent implements OnInit, AfterViewInit {
   ];
 
   dataSource: MatTableDataSource<any>;
-  vuelos: Vuelo[]
+  vuelos: Vuelo[];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
-    this.getReservaList()
-    this.obtenerAsientos()
-    this.obtenerVuelos()
-    this.obtenerUsuarios()
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
+    this.getReservaList();
+    this.obtenerAsientos();
+    this.obtenerVuelos();
+    this.obtenerUsuarios();
   }
 
   applyFilter(event: Event) {
@@ -80,37 +87,37 @@ export class AdmReservasComponent implements OnInit, AfterViewInit {
   }
 
   obtenerAsientos() {
-    this._asientoService.getAsientoList().subscribe(asientos => {
+    this._asientoService.getAsientoList().subscribe((asientos) => {
       this.asientos = asientos;
-    })
+    });
   }
 
   getUsuarioNombre(idUsuario: number): string {
     for (let i = 0; i < this.usuarios.length; i++) {
       if (idUsuario === this.usuarios[i].idUsuario) {
-        return this.usuarios[i].nombre + ' ' + this.usuarios[i].apellido
+        return this.usuarios[i].nombre + ' ' + this.usuarios[i].apellido;
       }
     }
-    return 'no hay nombre'
+    return 'no hay nombre';
   }
 
   getAsientoDescripcion(idAsiento: number): string {
     for (let i = 0; i < this.asientos.length; i++) {
       if (idAsiento === this.asientos[i].idAsiento) {
-        return this.asientos[i].ubicacion
+        return this.asientos[i].ubicacion;
       }
     }
-    return 'no hay ubicacion'
+    return 'no hay ubicacion';
   }
 
   obtenerUsuarios(): void {
-    this._usuarioService.getUsuarioList().subscribe(usuarios => {
+    this._usuarioService.getUsuarioList().subscribe((usuarios) => {
       this.usuarios = usuarios;
     });
   }
 
   obtenerVuelos(): void {
-    this._vueloService.getVueloList().subscribe(vuelos => {
+    this._vueloService.getVueloList().subscribe((vuelos) => {
       this.vuelos = vuelos;
     });
   }
@@ -119,30 +126,30 @@ export class AdmReservasComponent implements OnInit, AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '100%'; // Ancho inicial del cuadro de diálogo
     dialogConfig.maxWidth = '800px'; // Ancho máximo del cuadro de diálogo
-  
+
     const dialogRef = this._dialog.open(AddEditReservaComponent, dialogConfig);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getReservaList();
         }
-      }
+      },
     });
   }
 
   getEstado(estado: string): string {
     if (estado === 'A') {
-      return 'Activo'
+      return 'Activo';
     } else {
-      return 'Inactivo'
+      return 'Inactivo';
     }
   }
 
   getEstadoPago(estado: string): string {
     if (estado === 'P') {
-      return 'Pagado'
+      return 'Pagado';
     } else {
-      return 'En Espera'
+      return 'En Espera';
     }
   }
 
@@ -155,30 +162,31 @@ export class AdmReservasComponent implements OnInit, AfterViewInit {
         console.log(res);
       },
       error: console.log,
-    })
+    });
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar esta reserva?` }
+      data: { mensaje: `¿Está seguro que desea eliminar esta reserva?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._reservaService.deleteReserva(id).subscribe({
           next: (res) => {
             this._mensajeService.openSnackBar(`La reserva ha sido eliminada`);
             this.getReservaList();
+            window.location.reload();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
   deleteReserva(id: number) {
-    this.confirmarEliminacion(id, '')
+    this.confirmarEliminacion(id, '');
   }
 
   openEditForm(data: any) {
@@ -191,9 +199,7 @@ export class AdmReservasComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getReservaList();
         }
-      }
+      },
     });
   }
-
-
 }

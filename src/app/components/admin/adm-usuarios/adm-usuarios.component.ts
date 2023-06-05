@@ -14,11 +14,10 @@ import { Usuario } from 'src/app/models/Usuario';
 @Component({
   selector: 'app-adm-usuarios',
   templateUrl: './adm-usuarios.component.html',
-  styleUrls: ['./adm-usuarios.component.css']
+  styleUrls: ['./adm-usuarios.component.css'],
 })
 export class AdmUsuariosComponent implements OnInit, AfterViewInit {
-
-  usuarios: Usuario[]
+  usuarios: Usuario[];
 
   displayedColumns: string[] = [
     'id',
@@ -27,7 +26,7 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
     'correo',
     'idRolUsuario',
     'estado',
-    'acciones'
+    'acciones',
   ];
 
   dataSource: MatTableDataSource<any>;
@@ -40,27 +39,26 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
     private _usuarioService: UsuarioService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
 
   getRolDescripcion(idRol: number): string {
-
-    if(idRol === 1) {
-      return 'Administrador'
+    if (idRol === 1) {
+      return 'Administrador';
     } else {
-      return 'Cliente'
+      return 'Cliente';
     }
   }
 
   getEstado(estado: string): string {
     if (estado === 'A') {
-      return 'Activo'
+      return 'Activo';
     } else {
-      return 'Inactivo'
+      return 'Inactivo';
     }
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort
+    this.dataSource.sort = this.sort;
   }
 
   announceSortChange(sortState: Sort) {
@@ -72,18 +70,25 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getUsuarioList()
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
 
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
+    this.getUsuarioList();
   }
 
   openAddEditUsuarioForm() {
-    const dialogRef = this._dialog.open(AddEditUsuarioComponent)
+    const dialogRef = this._dialog.open(AddEditUsuarioComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getUsuarioList();
         }
-      }
+      },
     });
   }
 
@@ -114,26 +119,27 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar a ${nombreCompleto}?` }
+      data: { mensaje: `¿Está seguro que desea eliminar a ${nombreCompleto}?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._usuarioService.deleteUsuario(id).subscribe({
           next: (res) => {
-            this._mensajeService.openSnackBar(`${nombreCompleto} ha sido eliminado`);
+            this._mensajeService.openSnackBar(
+              `${nombreCompleto} ha sido eliminado`
+            );
             this.getUsuarioList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
   deleteUsuario(id: number) {
-    this.confirmarEliminacion(id, '')
+    this.confirmarEliminacion(id, '');
   }
-
 
   openEditForm(data: any) {
     const dialogRef = this._dialog.open(AddEditUsuarioComponent, {
@@ -145,10 +151,7 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getUsuarioList();
         }
-      }
+      },
     });
   }
-
-
-
 }

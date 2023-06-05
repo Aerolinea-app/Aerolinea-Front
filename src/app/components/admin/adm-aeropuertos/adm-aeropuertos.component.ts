@@ -12,18 +12,24 @@ import { AddEditAeropuertoComponent } from './add-edit-aeropuerto/add-edit-aerop
 @Component({
   selector: 'app-adm-aeropuertos',
   templateUrl: './adm-aeropuertos.component.html',
-  styleUrls: ['./adm-aeropuertos.component.css']
+  styleUrls: ['./adm-aeropuertos.component.css'],
 })
 export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
-
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-
   ngOnInit(): void {
-    this.getAeropuertoList()
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
+    this.getAeropuertoList();
   }
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
@@ -53,7 +59,7 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
     'ubicacion',
     'estado',
     // 'imagenCiudad',
-    'acciones'
+    'acciones',
   ];
 
   constructor(
@@ -61,16 +67,16 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
     private _aeropuertoService: AeropuertoService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
 
   openAddEditAeropuertoForm() {
-    const dialogRef = this._dialog.open(AddEditAeropuertoComponent)
+    const dialogRef = this._dialog.open(AddEditAeropuertoComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getAeropuertoList();
         }
-      }
+      },
     });
   }
 
@@ -80,9 +86,9 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
 
   getEstado(estado: string): string {
     if (estado === 'A') {
-      return 'Activo'
+      return 'Activo';
     } else {
-      return 'Inactivo'
+      return 'Inactivo';
     }
   }
 
@@ -94,30 +100,32 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
       },
       error: console.log,
-    })
+    });
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar este aeropuerto?` }
+      data: { mensaje: `¿Está seguro que desea eliminar este aeropuerto?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._aeropuertoService.deleteAeropuerto(id).subscribe({
           next: (res) => {
-            this._mensajeService.openSnackBar(`El aeropuerto ha sido eliminado`);
+            this._mensajeService.openSnackBar(
+              `El aeropuerto ha sido eliminado`
+            );
             this.getAeropuertoList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
   deleteAeropuerto(id: number) {
-    this.confirmarEliminacion(id, '')
+    this.confirmarEliminacion(id, '');
   }
 
   openEditForm(data: any) {
@@ -130,8 +138,7 @@ export class AdmAeropuertosComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getAeropuertoList();
         }
-      }
+      },
     });
   }
-
 }

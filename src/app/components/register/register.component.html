@@ -1,15 +1,15 @@
-<app-navbar></app-navbar>
-
 <div class="container d-flex justify-content-center mt-5">
   <div class="register-card">
     <h2 class="register-title">Regístrate</h2>
-    <form [formGroup]="registrationForm">
+    <form [formGroup]="registrationForm" (ngSubmit)="onFormSubmit()">
       <mat-form-field appearance="fill">
         <mat-label>Cédula</mat-label>
         <input matInput formControlName="cedula" maxlength="10">
         <mat-error *ngIf="registrationForm.get('cedula').hasError('required')">La cédula es requerida</mat-error>
         <mat-error *ngIf="registrationForm.get('cedula').hasError('pattern')">La cédula debe contener 10 dígitos
           numéricos</mat-error>
+        <mat-error *ngIf="registrationForm.get('cedula').errors?.['cedulaNoDisponible']">Cedula ya
+          registrada</mat-error>
       </mat-form-field>
       <div class="row">
         <div class="col-6">
@@ -46,5 +46,3 @@
     <p class="login-link">¿Ya tienes una cuenta? <a routerLink="/login">Iniciar sesión</a></p>
   </div>
 </div>
-
-<app-footer></app-footer>

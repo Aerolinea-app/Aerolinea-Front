@@ -12,36 +12,36 @@ import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.
 @Component({
   selector: 'app-adm-tipoasientos',
   templateUrl: './adm-tipoasientos.component.html',
-  styleUrls: ['./adm-tipoasientos.component.css']
+  styleUrls: ['./adm-tipoasientos.component.css'],
 })
 export class AdmTipoasientosComponent implements OnInit, AfterViewInit {
-
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-
   ngOnInit(): void {
-    this.getTipoAsientoList()
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+    this.getTipoAsientoList();
   }
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
   }
 
-  displayedColumns: string[] = [
-    'id',
-    'descripcion',
-    'estado',
-    'acciones'
-  ];
+  displayedColumns: string[] = ['id', 'descripcion', 'estado', 'acciones'];
 
   constructor(
     private _dialog: MatDialog,
     private _tipoAsientoService: TipoasientoService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
@@ -61,13 +61,13 @@ export class AdmTipoasientosComponent implements OnInit, AfterViewInit {
   }
 
   openAddEditTipoAsientoForm() {
-    const dialogRef = this._dialog.open(AddEditTipoasientosComponent)
+    const dialogRef = this._dialog.open(AddEditTipoasientosComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getTipoAsientoList();
         }
-      }
+      },
     });
   }
 
@@ -83,30 +83,34 @@ export class AdmTipoasientosComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
       },
       error: console.log,
-    })
+    });
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar este tipo de asiento?` }
+      data: {
+        mensaje: `¿Está seguro que desea eliminar este tipo de asiento?`,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._tipoAsientoService.deleteTipoAsiento(id).subscribe({
           next: (res) => {
-            this._mensajeService.openSnackBar(`El tipo de asiento ha sido eliminado`);
+            this._mensajeService.openSnackBar(
+              `El tipo de asiento ha sido eliminado`
+            );
             this.getTipoAsientoList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
   deleteTipoAsiento(id: number) {
-    this.confirmarEliminacion(id, '')
+    this.confirmarEliminacion(id, '');
   }
 
   openEditForm(data: any) {
@@ -119,8 +123,7 @@ export class AdmTipoasientosComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getTipoAsientoList();
         }
-      }
+      },
     });
   }
-
 }

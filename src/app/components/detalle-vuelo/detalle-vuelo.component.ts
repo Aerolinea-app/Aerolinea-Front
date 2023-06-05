@@ -11,8 +11,8 @@ import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
   styleUrls: ['./detalle-vuelo.component.css'],
 })
 export class DetalleVueloComponent implements OnInit {
-  vuelo: Vuelo;
-  aeropuertos: Aeropuerto[];
+  vuelo: any;
+  aeropuertos: any[];
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -22,7 +22,7 @@ export class DetalleVueloComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe((params) => {
       const vueloId = params.get('id');
       if (vueloId) {
-        // this.getVuelo(vueloId);
+        this.getVuelo(parseInt(vueloId));
         this.getAeropuertos(); // Obtener la lista de aeropuertos
       }
     });
@@ -32,7 +32,10 @@ export class DetalleVueloComponent implements OnInit {
 
   getVuelo(vueloId: number): void {
     this.vueloService.getVuelo(vueloId).subscribe((vuelo) => {
+      console.log('Hola');
+
       this.vuelo = vuelo;
+      console.log('vuelo', this.vuelo);
     });
   }
 
@@ -58,5 +61,13 @@ export class DetalleVueloComponent implements OnInit {
       (a) => a.idAeropuerto === aeropuertoId
     );
     return aeropuerto ? aeropuerto.nombre : '';
+  }
+
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo';
+    } else {
+      return 'Inactivo';
+    }
   }
 }

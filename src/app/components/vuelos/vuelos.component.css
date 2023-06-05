@@ -1,7 +1,7 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
 
 .row  {
-    min-height: 60vh;    
+    min-height: 60vh;
 }
 
 /* establecer un tamaño específico para cada imagen */
@@ -38,7 +38,7 @@
     justify-content: center;
     opacity: 0;
     transition: opacity 0.1s;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .overlay p {

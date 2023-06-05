@@ -16,7 +16,6 @@ import { FiltradorComponent } from './components/vuelos/filtrador/filtrador.comp
 
 import { MatNativeDateModule } from '@angular/material/core';
 import { AdminComponent } from './components/admin/admin.component';
-import { AdmNavbarComponent } from './shared/adm-navbar/adm-navbar.component';
 import { AdmUsuariosComponent } from './components/admin/adm-usuarios/adm-usuarios.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AddEditUsuarioComponent } from './components/admin/adm-usuarios/add-edit-usuario/add-edit-usuario.component';
@@ -28,8 +27,6 @@ import { AddEditVueloComponent } from './components/admin/adm-vuelos/add-edit-vu
 import { AddEditAvionComponent } from './components/admin/adm-aviones/add-edit-avion/add-edit-avion.component';
 import { AdmAeropuertosComponent } from './components/admin/adm-aeropuertos/adm-aeropuertos.component';
 import { AddEditAeropuertoComponent } from './components/admin/adm-aeropuertos/add-edit-aeropuerto/add-edit-aeropuerto.component';
-import { AdmTrayectosComponent } from './components/admin/adm-trayectos/adm-trayectos.component';
-import { AddEditTrayectoComponent } from './components/admin/adm-trayectos/add-edit-trayecto/add-edit-trayecto.component';
 import { DatePipe } from '@angular/common';
 import { AdmTipoasientosComponent } from './components/admin/adm-tipoasientos/adm-tipoasientos.component';
 import { AddEditTipoasientosComponent } from './components/admin/adm-tipoasientos/add-edit-tipoasientos/add-edit-tipoasientos.component';
@@ -41,6 +38,7 @@ import { AdmReservasComponent } from './components/admin/adm-reservas/adm-reserv
 import { AddEditReservaComponent } from './components/admin/adm-reservas/add-edit-reserva/add-edit-reserva.component';
 import { AuthInterceptor } from './auth.interceptor';
 import { SeatDialogComponent } from './components/admin/adm-reservas/seat-dialog/seat-dialog.component';
+import { PerfilComponent } from './components/perfil/perfil.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +51,6 @@ import { SeatDialogComponent } from './components/admin/adm-reservas/seat-dialog
     RegisterComponent,
     FiltradorComponent,
     AdminComponent,
-    AdmNavbarComponent,
     AdmUsuariosComponent,
     AddEditUsuarioComponent,
     ConfirmacionComponent,
@@ -63,8 +60,6 @@ import { SeatDialogComponent } from './components/admin/adm-reservas/seat-dialog
     AddEditVueloComponent,
     AdmAeropuertosComponent,
     AddEditAeropuertoComponent,
-    AdmTrayectosComponent,
-    AddEditTrayectoComponent,
     AdmTipoasientosComponent,
     AddEditTipoasientosComponent,
     AdmAsientosComponent,
@@ -74,6 +69,7 @@ import { SeatDialogComponent } from './components/admin/adm-reservas/seat-dialog
     AdmReservasComponent,
     AddEditReservaComponent,
     SeatDialogComponent,
+    PerfilComponent,
   ],
   imports: [
     BrowserModule,

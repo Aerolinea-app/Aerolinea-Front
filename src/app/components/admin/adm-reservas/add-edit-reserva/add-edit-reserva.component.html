@@ -73,7 +73,7 @@
           <mat-label>Estado</mat-label>
           <mat-select formControlName="estado">
             <mat-option value="Activo">Activo</mat-option>
-            <mat-option value="Inactivo">Inactivo</mat-option>
+            <mat-option value="Inactivo" disabled>Inactivo</mat-option>
           </mat-select>
           <mat-error *ngIf="reservaForm.get('estado').errors?.['required']">El estado es requerido</mat-error>
         </mat-form-field>

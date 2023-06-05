@@ -23,6 +23,14 @@ export class AdmVuelosComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
     this.obtenerAeropuertosActivos();
   }
 

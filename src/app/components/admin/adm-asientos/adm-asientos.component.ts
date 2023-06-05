@@ -13,17 +13,15 @@ import { AvionService } from 'src/app/services/Avion/avion.service';
 @Component({
   selector: 'app-adm-asientos',
   templateUrl: './adm-asientos.component.html',
-  styleUrls: ['./adm-asientos.component.css']
+  styleUrls: ['./adm-asientos.component.css'],
 })
 export class AdmAsientosComponent implements OnInit, AfterViewInit {
-
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
-  aviones: any[]
 
+  aviones: any[];
 
   displayedColumns: string[] = [
     'idAsiento',
@@ -41,13 +39,19 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
     private _avionService: AvionService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.getAsientoList()
-    this.obtenerAviones()
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
+    this.getAsientoList();
+    this.obtenerAviones();
   }
 
   ngAfterViewInit(): void {
@@ -73,16 +77,15 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
   }
 
   openAddEditAsientoForm() {
-    const dialogRef = this._dialog.open(AddEditAsientoComponent)
+    const dialogRef = this._dialog.open(AddEditAsientoComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getAsientoList();
         }
-      }
+      },
     });
   }
-
 
   getAsientoList() {
     this._asientoService.getAsientoList().subscribe({
@@ -92,21 +95,21 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
         this.dataSource.paginator = this.paginator;
       },
       error: console.log,
-    })
+    });
   }
 
   getTipoAsiento(idTipoAsiento: number): string {
     if (idTipoAsiento === 1) {
-      return 'Preferencial'
+      return 'Preferencial';
     } else if (idTipoAsiento === 2) {
-      return 'Vip'
+      return 'Vip';
     } else {
-      return 'Turista'
+      return 'Turista';
     }
   }
 
   obtenerAviones(): void {
-    this._avionService.getAvionList().subscribe(aviones => {
+    this._avionService.getAvionList().subscribe((aviones) => {
       this.aviones = aviones;
     });
   }
@@ -114,41 +117,41 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
   getAerolinea(idAvion: number): string {
     for (let i = 0; i < this.aviones.length; i++) {
       if (idAvion === this.aviones[i].idAvion) {
-        return this.aviones[i].aerolineaAvion
+        return this.aviones[i].aerolineaAvion;
       }
     }
-    return 'no hay aerolinea'
+    return 'no hay aerolinea';
   }
 
   getEstado(estado: string): string {
     if (estado === 'A') {
-      return 'Activo'
+      return 'Activo';
     } else {
-      return 'Inactivo'
+      return 'Inactivo';
     }
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar este asiento?` }
+      data: { mensaje: `¿Está seguro que desea eliminar este asiento?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._asientoService.deleteAsiento(id).subscribe({
           next: (res) => {
             this._mensajeService.openSnackBar(`El asiento ha sido eliminado`);
             this.getAsientoList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
   deleteAsiento(id: number) {
-    this.confirmarEliminacion(id, '')
+    this.confirmarEliminacion(id, '');
   }
 
   openEditForm(data: any) {
@@ -161,9 +164,7 @@ export class AdmAsientosComponent implements OnInit, AfterViewInit {
         if (val) {
           // this.getAsientoList();
         }
-      }
+      },
     });
   }
-
 }
-
