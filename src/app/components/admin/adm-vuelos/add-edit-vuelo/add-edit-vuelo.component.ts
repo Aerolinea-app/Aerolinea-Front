@@ -1,16 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { forkJoin } from 'rxjs';
 import { Aeropuerto } from 'src/app/models/Aeropuerto';
-import { Asiento } from 'src/app/models/Asiento';
-import { Avion } from 'src/app/models/Avion';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
 import { AsientoService } from 'src/app/services/Asiento/asiento.service';
 import { AvionService } from 'src/app/services/Avion/avion.service';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
-import { NgxMatDatetimePicker } from '@angular-material-components/datetime-picker';
+import moment from 'moment';
 
 @Component({
   selector: 'app-add-edit-vuelo',
@@ -28,9 +25,7 @@ export class AddEditVueloComponent {
 
   myDatePicker: Date;
 
-  horaLlegada = '';
   fechaLlegada = '';
-  horaSalida = '';
   fechaSalida = '';
   estado = '';
 
@@ -48,9 +43,7 @@ export class AddEditVueloComponent {
       idAeropuertoDestino: ['', Validators.required],
       precioVuelo: ['', [Validators.required, Validators.min(0)]],
       fechaSalida: ['', Validators.required],
-      horaSalida: ['', Validators.required],
       fechaLlegada: ['', Validators.required],
-      horaLlegada: ['', Validators.required],
       precioAsientoTurista: ['', [Validators.required, Validators.min(0)]],
       precioAsientoPreferencial: ['', [Validators.required, Validators.min(0)]],
       precioAsientoVip: ['', [Validators.required, Validators.min(0)]],
@@ -93,32 +86,8 @@ export class AddEditVueloComponent {
     );
   }
 
-  getFormattedDate = (date) => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
-  };
-
   onFormSubmit() {
     if (this.vueloForm.valid) {
-      const horaSalida = this.vueloForm.get('horaSalida').value;
-      const fechaSalida = this.vueloForm.get('fechaSalida').value;
-
-      const horaLlegada = this.vueloForm.get('horaLlegada').value;
-      const fechaLlegada = this.vueloForm.get('fechaLlegada').value;
-
-      const _fechaHoraSalida = this.getFormattedDate(
-        new Date(`${fechaSalida.toISOString().slice(0, 10)} ${horaSalida}`)
-      );
-      const _fechaHoraLlegada = this.getFormattedDate(
-        new Date(`${fechaLlegada.toISOString().slice(0, 10)} ${horaLlegada}`)
-      );
 
       this.estado = this.vueloForm.get('estado').value;
 
@@ -134,14 +103,11 @@ export class AddEditVueloComponent {
           idAeropuertoOrigen: this.vueloForm.get('idAeropuertoOrigen').value,
           idAeropuertoDestino: this.vueloForm.get('idAeropuertoDestino').value,
           precio: this.vueloForm.get('precioVuelo').value,
-          precioAsientoPreferencial: this.vueloForm.get(
-            'precioAsientoPreferencial'
-          ).value,
+          precioAsientoPreferencial: this.vueloForm.get('precioAsientoPreferencial').value,
           precioAsientoVip: this.vueloForm.get('precioAsientoVip').value,
-          precioAsientoTurista: this.vueloForm.get('precioAsientoTurista')
-            .value,
-          fechaHoraSalida: _fechaHoraSalida,
-          fechaHoraLlegada: _fechaHoraLlegada,
+          precioAsientoTurista: this.vueloForm.get('precioAsientoTurista').value,
+          fechaHoraSalida: this.vueloForm.get('fechaSalida').value,
+          fechaHoraLlegada: this.vueloForm.get('fechaLlegada').value,
           estado: this.estado, // Establecer valor predeterminado si es un nuevo vuelo
         };
 
@@ -162,14 +128,11 @@ export class AddEditVueloComponent {
           idAeropuertoOrigen: this.vueloForm.get('idAeropuertoOrigen').value,
           idAeropuertoDestino: this.vueloForm.get('idAeropuertoDestino').value,
           precio: this.vueloForm.get('precioVuelo').value,
-          precioAsientoPreferencial: this.vueloForm.get(
-            'precioAsientoPreferencial'
-          ).value,
+          precioAsientoPreferencial: this.vueloForm.get('precioAsientoPreferencial').value,
           precioAsientoVip: this.vueloForm.get('precioAsientoVip').value,
-          precioAsientoTurista: this.vueloForm.get('precioAsientoTurista')
-            .value,
-          fechaHoraSalida: _fechaHoraSalida,
-          fechaHoraLlegada: _fechaHoraLlegada,
+          precioAsientoTurista: this.vueloForm.get('precioAsientoTurista').value,
+          fechaHoraSalida: this.vueloForm.get('fechaSalida').value,
+          fechaHoraLlegada: this.vueloForm.get('fechaLlegada').value,
           estado: this.estado, // Establecer valor predeterminado si es un nuevo vuelo
         };
 
