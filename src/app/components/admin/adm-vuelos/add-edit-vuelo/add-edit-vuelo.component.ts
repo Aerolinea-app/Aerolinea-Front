@@ -180,6 +180,7 @@ export class AddEditVueloComponent {
             this._mensajeService.openSnackBar('Vuelo añadido correctamente!');
             this._dialogRef.close(true);
             console.log('Vuelo añadido: ', newVuelo);
+
           },
           error: (err: any) => {
             console.log(err);
