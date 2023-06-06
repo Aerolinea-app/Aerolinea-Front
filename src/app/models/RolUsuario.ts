@@ -1,5 +1,5 @@
 export interface RolUsuario {
-    id: number
-    descripcion: string
-    estado: string
+  id: number;
+  descripcion: string;
+  estado: string;
 }

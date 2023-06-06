@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Aeropuerto } from 'src/app/models/Aeropuerto';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
@@ -15,6 +15,8 @@ export class AddEditAeropuertoComponent {
   aeropuertos: Aeropuerto[]
   aeropuertoForm: FormGroup;
 
+  estado = ''
+
   constructor(
     private _fb: FormBuilder,
     private _aeropuertoService: AeropuertoService,
@@ -24,16 +26,19 @@ export class AddEditAeropuertoComponent {
   ) {
     this.aeropuertoForm = this._fb.group({
       id: '',
-      nombre: '',
-      iata: '',
-      ubicacion: '',
-      estado: '',
+      nombre: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]+$/)]],
+      iata: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]+$/)]],
+      ubicacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]+$/)]],
+      estado: ['', Validators.required],
     });
-    if (this.data && this.data.id) {
-      // Si estás editando un vuelo existente, extrae el número de vuelo de la cadena "VUE-xxx"
-      const numAeropuerto = this.data.id.substring(3);
-      this.aeropuertoForm.get('id').setValue(`AV-${numAeropuerto}`);
+    if (this.data && this.data.nombre) {
+      const idAeropuerto = this.data.idAeropuerto;
+      const nombre = this.data.nombre; // Obtén el valor de aerolinea del objeto data
+      this.aeropuertoForm.get('id').setValue(idAeropuerto); // Establece el valor del campo 'id'
+      this.aeropuertoForm.get('nombre').setValue(nombre); // Establece el valor del campo 'aerolinea'
       this.aeropuertoForm.patchValue(this.data);
+
+
     }
   }
 
@@ -45,11 +50,28 @@ export class AddEditAeropuertoComponent {
   onFormSubmit() {
 
     if (this.aeropuertoForm.valid) {
+
+      this.estado = this.aeropuertoForm.get('estado').value
+
+      if (this.estado == 'Activo') {
+        this.estado = 'A'
+      } else {
+        this.estado = 'I'
+      }
+
       if (this.data) {
-        this._aeropuertoService.updateAeropuerto(this.data.id, this.aeropuertoForm.value)
+        const updateAeropuerto = {
+          idAeropuerto: this.data.idAeropuerto.toString(),
+          nombre: this.aeropuertoForm.get('nombre').value,
+          iata: this.aeropuertoForm.get('iata').value,
+          ubicacion: this.aeropuertoForm.get('ubicacion').value,
+          estado: this.estado
+        };
+
+        this._aeropuertoService.updateAeropuerto(updateAeropuerto)
           .subscribe({
             next: (val: any) => {
-              this._mensajeService.openSnackBar('Aeropuertos actualizado correctamente!')
+              this._mensajeService.openSnackBar('Aeropuerto actualizado correctamente!')
               this._dialogRef.close(true);
               console.log(this.data)
             },
@@ -58,7 +80,16 @@ export class AddEditAeropuertoComponent {
             }
           })
       } else {
-        this._aeropuertoService.addAeropuerto(this.aeropuertoForm.value).subscribe({
+
+        const newAeropuerto = {
+          idAeropuerto: '1000', // Corregir aquí: usar 'id' en lugar de 'idAvion'
+          nombre: this.aeropuertoForm.get('nombre').value,
+          iata: this.aeropuertoForm.get('iata').value,
+          ubicacion: this.aeropuertoForm.get('ubicacion').value,
+          estado: this.estado
+        };
+
+        this._aeropuertoService.addAeropuerto(newAeropuerto).subscribe({
           next: (val: any) => {
             this._mensajeService.openSnackBar('Aeropuerto actualizado correctamente!')
             this._dialogRef.close(true);

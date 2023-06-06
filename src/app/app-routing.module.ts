@@ -9,32 +9,34 @@ import { AdmUsuariosComponent } from './components/admin/adm-usuarios/adm-usuari
 import { AdmAvionesComponent } from './components/admin/adm-aviones/adm-aviones.component';
 import { AdmVuelosComponent } from './components/admin/adm-vuelos/adm-vuelos.component';
 import { AdmAeropuertosComponent } from './components/admin/adm-aeropuertos/adm-aeropuertos.component';
-import { AdmTrayectosComponent } from './components/admin/adm-trayectos/adm-trayectos.component';
-import { AdmFacturasComponent } from './components/admin/adm-facturas/adm-facturas.component';
 import { AdmTipoasientosComponent } from './components/admin/adm-tipoasientos/adm-tipoasientos.component';
 import { AdmAsientosComponent } from './components/admin/adm-asientos/adm-asientos.component';
-
+import { DetalleVueloComponent } from './components/detalle-vuelo/detalle-vuelo.component';
+import { AdmReservasComponent } from './components/admin/adm-reservas/adm-reservas.component';
+import { AuthGuard } from './services/AuthGuard/auth-guard.service';
+import { PerfilComponent } from './components/perfil/perfil.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
   { path: 'vuelos', component: VuelosComponent },
+  { path: 'detalle-vuelo/:id', component: DetalleVueloComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'admin', component: AdminComponent},
-  { path: 'admin/adm-usuarios', component: AdmUsuariosComponent},
-  { path: 'admin/adm-aviones', component: AdmAvionesComponent},
-  { path: 'admin/adm-vuelos', component: AdmVuelosComponent},
-  { path: 'admin/adm-aeropuertos', component: AdmAeropuertosComponent},
-  { path: 'admin/adm-trayectos', component: AdmTrayectosComponent},
-  { path: 'admin/adm-facturas', component: AdmFacturasComponent},
-  { path: 'admin/adm-tipoasientos', component: AdmTipoasientosComponent},
-  { path: 'admin/adm-asientos', component: AdmAsientosComponent},
-  
+  { path: 'admin', component: AdminComponent },
+  { path: 'perfil', component: PerfilComponent },
+  { path: 'admin/adm-usuarios', component: AdmUsuariosComponent },
+  { path: 'admin/adm-aviones', component: AdmAvionesComponent },
+  { path: 'admin/adm-vuelos', component: AdmVuelosComponent },
+  { path: 'admin/adm-aeropuertos', component: AdmAeropuertosComponent },
+  { path: 'admin/adm-tipoasientos', component: AdmTipoasientosComponent },
+  { path: 'admin/adm-asientos', component: AdmAsientosComponent },
+  { path: 'admin/adm-reservas', component: AdmReservasComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthGuard], // Add AuthGuard here
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

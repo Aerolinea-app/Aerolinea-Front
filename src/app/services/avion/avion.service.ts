@@ -1,6 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map, of, switchMap } from 'rxjs';
+import { Asiento } from 'src/app/models/Asiento';
+import { Avion } from 'src/app/models/Avion';
+import { Vuelo } from 'src/app/models/Vuelo';
 
 @Injectable({
   providedIn: 'root'
@@ -12,30 +15,27 @@ export class AvionService {
   ) { }
 
   addAvion(nuevoAvion: any): Observable<any> {
-    const id = this.generarNuevoId();
-    nuevoAvion.id = id;
-    return this._http.post('http://localhost:3000/aviones', nuevoAvion);
+    return this._http.post('http://localhost:8080/aviones/agregarAvion', nuevoAvion);
   }
 
-  updateAvion(id: number, data: any): Observable<any> {
-    return this._http.put(`http://localhost:3000/aviones/${id}`, data)
+  updateAvion(updateAvion: any): Observable<any> {
+    return this._http.put(`http://localhost:8080/aviones/updateAvion`, updateAvion)
   }
 
   getAvion(id: number): Observable<any> {
     return this._http.get(`http://localhost:3000/aviones/${id}`)
   }
 
-
   getAvionList(): Observable<any> {
-    return this._http.get('http://localhost:3000/aviones');
+    return this._http.get(`http://localhost:8080/aviones/obtenerAviones`);
+  }
+  
+  getAvionActivoList(): Observable<any> {
+    return this._http.get(`http://localhost:8080/aviones/obtenerAvionesActivos`);
   }
 
   deleteAvion(id: number): Observable<any> {
-    return this._http.delete(`http://localhost:3000/aviones/${id}`)
+    return this._http.delete(`http://localhost:8080/aviones/deleteAvion/${id}`)
   }
 
-  private generarNuevoId(): string {
-    const numero = Math.floor(Math.random() * 1000) + 1;
-    return `AV-${numero.toString().padStart(3, '0')}`;
-  }
 }

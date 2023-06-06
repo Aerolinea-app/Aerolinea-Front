@@ -7,35 +7,36 @@ import { Observable } from 'rxjs';
 })
 export class VueloService {
 
-  constructor(
-    private _http: HttpClient
-  ) { }
+  constructor(private _http: HttpClient) { }
 
-  addVuelo(nuevoVuelo: any): Observable<any> {
-    const id = this.generarNuevoId();
-    nuevoVuelo.id = id;
-    return this._http.post('http://localhost:3000/vuelos', nuevoVuelo);
+  addVuelo(nuevoVuelo: any): Observable<any> | any {
+    try {
+      console.log('desde service: ', nuevoVuelo)
+      return this._http.post('http://localhost:8080/vuelo/guardarVuelo', nuevoVuelo);
+    } catch (error) {
+      console.log(error);
+      return ''
+    }
   }
-
-  updateVuelo(id: number, data: any): Observable<any> {
-    return this._http.put(`http://localhost:3000/vuelos/${id}`, data)
-  }
-
-  getVuelo(id: number): Observable<any> {
-    return this._http.get(`http://localhost:3000/vuelos/${id}`)
-  }
-
 
   getVueloList(): Observable<any> {
-    return this._http.get('http://localhost:3000/vuelos');
+    return this._http.get(`http://localhost:8080/vuelo/obtenerVuelos`);
   }
 
-  deleteVuelo(id: number): Observable<any> {
-    return this._http.delete(`http://localhost:3000/vuelos/${id}`)
+  getVueloActivoList(): Observable<any> {
+    return this._http.get(`http://localhost:8080/vuelo/obtenerVuelosActivos`);
   }
 
-  private generarNuevoId(): string {
-    const numero = Math.floor(Math.random() * 1000) + 1;
-    return `VUE-${numero.toString().padStart(3, '0')}`;
+  getVuelo(vueloId: number): Observable<any> {
+    return this._http.get(`http://localhost:8080/vuelo/obtenerVuelo/${vueloId}`);;
+  }
+
+  deleteVuelo(vueloId: number): Observable<any> {
+    return this._http.delete(`http://localhost:8080/vuelo/deleteVuelo/${vueloId}`)
+  }
+
+  updateVuelo(data: any): Observable<any> {
+    return this._http.put(`http://localhost:8080/vuelo/updateVuelo`, data);
   }
 }
+

@@ -21,7 +21,7 @@ export class TipoasientoService {
     return this._http.put(`http://localhost:3000/tipoAsientos/${id}`, data)
   }
 
-  getTipoAsiento(id: number): Observable<any> {
+  getTipoAsiento(id: string): Observable<any> {
     return this._http.get(`http://localhost:3000/tipoAsientos/${id}`)
   }
 

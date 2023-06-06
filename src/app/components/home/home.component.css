@@ -1,10 +1,9 @@
 .bg-image {
-    background-image: url("../../../assets/img/home.jpg");
+    background: url("../../../assets/img/home.jpg");
     background-size: cover;
     background-position: center;
     position: relative;
     height: calc(100vh - 120px);
-    /* Resta la altura del navbar (60px) y el footer (60px) */
     overflow: hidden;
 }
 

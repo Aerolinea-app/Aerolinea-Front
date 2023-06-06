@@ -14,7 +14,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatFormFieldModule} from '@angular/material/form-field'; 
 import {MatSortModule} from '@angular/material/sort'; 
 import {MatRadioModule} from '@angular/material/radio'; 
-
+import {MatGridListModule} from '@angular/material/grid-list'; 
+import { NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 @NgModule({
   declarations: [],
@@ -33,7 +34,10 @@ import {MatRadioModule} from '@angular/material/radio';
     MatFormFieldModule,
     MatSortModule,
     MatRadioModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatGridListModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule
   ],
   exports: [
     MatInputModule,
@@ -49,7 +53,10 @@ import {MatRadioModule} from '@angular/material/radio';
     MatFormFieldModule,
     MatSortModule,
     MatRadioModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatGridListModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule
   ]
 })
 export class AngularMaterialModule { }

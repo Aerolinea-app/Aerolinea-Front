@@ -2,16 +2,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { Vuelo } from 'src/app/models/Vuelo';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
 
-
 @Component({
   selector: 'app-filtrador',
   templateUrl: './filtrador.component.html',
-  styleUrls: ['./filtrador.component.css']
+  styleUrls: ['./filtrador.component.css'],
 })
-
 export class FiltradorComponent {
-
-  vuelos: Vuelo[]
+  vuelos: Vuelo[];
 
   today = new Date();
   maxDate = new Date(new Date().getFullYear() + 1, 11, 31); // Ejemplo: fecha máxima de un año a partir de hoy
@@ -22,11 +19,9 @@ export class FiltradorComponent {
 
   @Output() filtrarVuelos = new EventEmitter<Vuelo[]>();
 
-  constructor(
-    private _vueloService: VueloService
-  ) {
+  constructor(private _vueloService: VueloService) {
     for (let i = 1; i <= 12; i++) {
-      this.options.push({ value: i, label: i + ' Pasajeros' })
+      this.options.push({ value: i, label: i + ' Pasajeros' });
     }
   }
 
@@ -38,18 +33,18 @@ export class FiltradorComponent {
   }
 
   onBuscarVuelo() {
-    this._vueloService.getVueloList().subscribe(vuelos => {
-      this.vuelos = vuelos.filter(vuelo =>
-        // Filtramos los vuelos que tengan origen y destino igual a los seleccionados
-        vuelo.origen === vuelo.origen && vuelo.destino === vuelo.destinoSeleccionado &&
-        // Filtramos los vuelos que tengan fecha de salida igual o posterior a la seleccionada
-        new Date(vuelo.fechaSalida) >= this.departureDate &&
-        // Filtramos los vuelos que tengan fecha de llegada igual o posterior a la seleccionada
-        new Date(vuelo.fechaLlegada) >= this.minArrivalDate
+    this._vueloService.getVueloList().subscribe((vuelos) => {
+      this.vuelos = vuelos.filter(
+        (vuelo) =>
+          // Filtramos los vuelos que tengan origen y destino igual a los seleccionados
+          vuelo.origen === vuelo.origen &&
+          vuelo.destino === vuelo.destinoSeleccionado &&
+          // Filtramos los vuelos que tengan fecha de salida igual o posterior a la seleccionada
+          new Date(vuelo.fechaSalida) >= this.departureDate &&
+          // Filtramos los vuelos que tengan fecha de llegada igual o posterior a la seleccionada
+          new Date(vuelo.fechaLlegada) >= this.minArrivalDate
       );
       this.filtrarVuelos.emit(this.vuelos);
     });
   }
-
-
 }

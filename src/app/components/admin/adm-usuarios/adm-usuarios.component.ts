@@ -3,22 +3,21 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { UsuariosService } from 'src/app/services/Usuarios/usuarios.service';
 import { AddEditUsuarioComponent } from './add-edit-usuario/add-edit-usuario.component';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.component';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { RolUsuario } from 'src/app/models/RolUsuario';
-import { RolusuarioService } from 'src/app/services/RolUsuario/rolusuario.service';
+import { UsuarioService } from 'src/app/services/Usuarios/usuario.service';
+import { Usuario } from 'src/app/models/Usuario';
 
 @Component({
   selector: 'app-adm-usuarios',
   templateUrl: './adm-usuarios.component.html',
-  styleUrls: ['./adm-usuarios.component.css']
+  styleUrls: ['./adm-usuarios.component.css'],
 })
 export class AdmUsuariosComponent implements OnInit, AfterViewInit {
-
-  roles: RolUsuario[]
+  usuarios: Usuario[];
 
   displayedColumns: string[] = [
     'id',
@@ -27,7 +26,7 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
     'correo',
     'idRolUsuario',
     'estado',
-    'acciones'
+    'acciones',
   ];
 
   dataSource: MatTableDataSource<any>;
@@ -37,32 +36,29 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
 
   constructor(
     private _dialog: MatDialog,
-    private _usuarioService: UsuariosService,
-    private _rolUsuarioService: RolusuarioService,
+    private _usuarioService: UsuarioService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
 
   getRolDescripcion(idRol: number): string {
-    if (!this.roles) {
-      return '';
+    if (idRol === 1) {
+      return 'Administrador';
+    } else {
+      return 'Cliente';
     }
-
-    const rol = this.roles.find(r => r.id === idRol);
-    return rol ? rol.descripcion : '';
   }
 
-
-
-  obtenerRoles(): void {
-    this._rolUsuarioService.getRolUsuarioList().subscribe(roles => {
-      console.log(roles);
-      this.roles = roles;
-    });
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo';
+    } else {
+      return 'Inactivo';
+    }
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort
+    this.dataSource.sort = this.sort;
   }
 
   announceSortChange(sortState: Sort) {
@@ -74,30 +70,41 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getUsuarioList()
-    this.obtenerRoles();
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
+    this.getUsuarioList();
   }
 
   openAddEditUsuarioForm() {
-    const dialogRef = this._dialog.open(AddEditUsuarioComponent)
+    const dialogRef = this._dialog.open(AddEditUsuarioComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getUsuarioList();
         }
-      }
+      },
     });
   }
 
   getUsuarioList() {
-    this._usuarioService.getUsuarioList().subscribe({
-      next: (res) => {
-        this.dataSource = new MatTableDataSource(res);
+    this._usuarioService.getUsuarioList().subscribe(
+      (data: any[]) => {
+        this.usuarios = data;
+        console.log(data); // Imprimir datos recibidos
+        this.dataSource = new MatTableDataSource(this.usuarios);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      error: console.log,
-    })
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   applyFilter(event: Event) {
@@ -112,32 +119,27 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar a ${nombreCompleto}?` }
+      data: { mensaje: `¿Está seguro que desea eliminar a ${nombreCompleto}?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._usuarioService.deleteUsuario(id).subscribe({
           next: (res) => {
-            this._mensajeService.openSnackBar(`${nombreCompleto} ha sido eliminado`);
+            this._mensajeService.openSnackBar(
+              `${nombreCompleto} ha sido eliminado`
+            );
             this.getUsuarioList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
-  }
-
-  deleteUsuario(id: number) {
-    this._usuarioService.getUsuario(id).subscribe({
-      next: (usuario) => {
-        const nombreCompleto = `${usuario.nombre} ${usuario.apellido}`;
-        this.confirmarEliminacion(id, nombreCompleto);
-      },
-      error: console.log,
     });
   }
 
+  deleteUsuario(id: number) {
+    this.confirmarEliminacion(id, '');
+  }
 
   openEditForm(data: any) {
     const dialogRef = this._dialog.open(AddEditUsuarioComponent, {
@@ -149,10 +151,7 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getUsuarioList();
         }
-      }
+      },
     });
   }
-
-
-
 }

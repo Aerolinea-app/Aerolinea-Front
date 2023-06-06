@@ -8,19 +8,32 @@ import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { AvionService } from 'src/app/services/Avion/avion.service';
 import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.component';
 import { AddEditAvionComponent } from './add-edit-avion/add-edit-avion.component';
+import { Avion } from 'src/app/models/Avion';
 
 @Component({
   selector: 'app-adm-aviones',
   templateUrl: './adm-aviones.component.html',
-  styleUrls: ['./adm-aviones.component.css']
+  styleUrls: ['./adm-aviones.component.css'],
 })
 export class AdmAvionesComponent implements OnInit, AfterViewInit {
+  aviones: any[];
 
   ngOnInit(): void {
-    this.getAvionList()
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      window.location.href = '/';
+    } else if (usuario.rol !== 'Administrador') {
+      window.location.href = '/';
+    }
+
+    this.getAvionList();
   }
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort
+    if (this.dataSource) {
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    }
   }
 
   announceSortChange(sortState: Sort) {
@@ -40,12 +53,15 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  displayedColumns: string[] = [
-    'id',
-    'aerolinea',
-    'estado',
-    'acciones'
-  ];
+  displayedColumns: string[] = ['id', 'aerolinea', 'estado', 'acciones'];
+
+  getEstado(estado: string): string {
+    if (estado === 'A') {
+      return 'Activo';
+    } else {
+      return 'Inactivo';
+    }
+  }
 
   dataSource: MatTableDataSource<any>;
 
@@ -57,54 +73,58 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
     private _avionService: AvionService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) { }
+  ) {}
   openAddEditAvionForm() {
-    const dialogRef = this._dialog.open(AddEditAvionComponent)
+    const dialogRef = this._dialog.open(AddEditAvionComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
           this.getAvionList();
         }
-      }
+      },
     });
   }
 
   getImageUrl(imagen: File): string {
     return URL.createObjectURL(imagen);
   }
-  
+
   getAvionList() {
-    this._avionService.getAvionList().subscribe({
-      next: (res) => {
-        this.dataSource = new MatTableDataSource(res);
+    this._avionService.getAvionList().subscribe(
+      (data: any[]) => {
+        this.aviones = data;
+        console.log(data); // Imprimir datos recibidos
+        this.dataSource = new MatTableDataSource(this.aviones);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       },
-      error: console.log,
-    })
+      (error) => {
+        console.error(error);
+      }
+    );
   }
 
   confirmarEliminacion(id: number, nombreCompleto: string) {
     const dialogRef = this._dialog.open(ConfirmacionComponent, {
       width: '350px',
-      data: { mensaje: `¿Está seguro que desea eliminar este avión?` }
+      data: { mensaje: `¿Está seguro que desea eliminar este avión?` },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this._avionService.deleteAvion(id).subscribe({
           next: (res) => {
             this._mensajeService.openSnackBar(`El avión ha sido eliminado`);
             this.getAvionList();
           },
-          error: console.log
-        })
+          error: console.log,
+        });
       }
-    })
+    });
   }
 
-  deleteAvion(id: number) {
-    this.confirmarEliminacion(id, '')
+  borrarAvion(id: number) {
+    this.confirmarEliminacion(id, '');
   }
 
   openEditForm(data: any) {
@@ -117,9 +137,7 @@ export class AdmAvionesComponent implements OnInit, AfterViewInit {
         if (val) {
           this.getAvionList();
         }
-      }
+      },
     });
   }
-
-
 }

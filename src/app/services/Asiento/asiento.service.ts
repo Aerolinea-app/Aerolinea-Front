@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,31 +11,20 @@ export class AsientoService {
     private _http: HttpClient
   ) { }
 
-  addAsiento(nuevoAsiento: any): Observable<any> {
-    const id = this.generarNuevoId();
-    nuevoAsiento.id = id;
-    return this._http.post('http://localhost:3000/asiento', nuevoAsiento);
+  addAsiento(nuevoAeropuerto: any): Observable<any> {
+    return this._http.post('http://localhost:8080/asiento/agregarAsiento', nuevoAeropuerto);
   }
 
-  updateAsiento(id: number, data: any): Observable<any> {
-    return this._http.put(`http://localhost:3000/asiento/${id}`, data)
+  updateAsiento(updateAeropuerto: any): Observable<any> {
+    return this._http.put(`http://localhost:8080/asiento/updateAsiento`, updateAeropuerto)
   }
-
-  getAsiento(id: number): Observable<any> {
-    return this._http.get(`http://localhost:3000/asiento/${id}`)
-  }
-
 
   getAsientoList(): Observable<any> {
-    return this._http.get('http://localhost:3000/asiento');
+    return this._http.get(`http://localhost:8080/asiento/obtenerAsientos`);
   }
 
   deleteAsiento(id: number): Observable<any> {
-    return this._http.delete(`http://localhost:3000/asiento/${id}`)
+    return this._http.delete(`http://localhost:8080/asiento/deleteAsiento/${id}`)
   }
 
-  private generarNuevoId(): string {
-    const numero = Math.floor(Math.random() * 1000) + 1;
-    return `AS-${numero.toString().padStart(3, '0')}`;
-  }
 }

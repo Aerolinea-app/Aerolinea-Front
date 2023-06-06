@@ -14,6 +14,8 @@ export class AddEditAvionComponent implements OnInit {
 
   avionForm: FormGroup;
 
+  estado = ''
+
   constructor(
     private _fb: FormBuilder,
     private _avionService: AvionService,
@@ -21,15 +23,18 @@ export class AddEditAvionComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private _mensajeService: MensajesService
   ) {
+
     this.avionForm = this._fb.group({
       id: '',
-      aerolinea: '',
-      estado: ''
+      aerolineaAvion: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\u00C0-\u00FF\s]+$/)]],
+      estado: ['', Validators.required]
     });
+
     if (this.data && this.data.aerolinea) {
-      // Si estás editando un avión existente, extrae el número de avión de la cadena "AV-xxx"
-      const numAvion = this.data.aerolinea.substring(3);
-      this.avionForm.get('aerolinea').setValue(`AV-${numAvion}`);
+      const idAvion = this.data.idAvion;
+      const aerolineaAvion = this.data.aerolineaAvion; // Obtén el valor de aerolinea del objeto data
+      this.avionForm.get('id').setValue(idAvion); // Establece el valor del campo 'id'
+      this.avionForm.get('aerolineaAvion').setValue(aerolineaAvion); // Establece el valor del campo 'aerolinea'
       this.avionForm.patchValue(this.data);
     }
   }
@@ -42,34 +47,71 @@ export class AddEditAvionComponent implements OnInit {
     this._dialogRef.close(false);
   }
 
+  capitalizeWords(value: string): string {
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+  
+  capitalizeInput(controlName: string): void {
+    const control = this.avionForm.get(controlName);
+    if (control && control.value) {
+      control.setValue(this.capitalizeWords(control.value), { emitEvent: false });
+    }
+  }
+
   onFormSubmit() {
     if (this.avionForm.valid) {
 
-      const newAvion = {
-        aerolinea: this.avionForm.get('aerolinea').value,
-        estado: this.avionForm.get('estado').value
+      this.estado = this.avionForm.get('estado').value
+
+      if (this.estado == 'Activo') {
+        this.estado = 'A'
+      } else {
+        this.estado = 'I'
       }
 
       if (this.data) {
-        this._avionService.updateAvion(this.data.id, this.avionForm.value).subscribe({
+
+        const updateAvion = {
+          idAvion: this.data.idAvion.toString(), // Corregir aquí: usar 'id' en lugar de 'idAvion'
+          aerolineaAvion: this.avionForm.get('aerolineaAvion').value,
+          estado: this.estado
+        };
+
+        this._avionService.updateAvion(updateAvion).subscribe({
           next: (val: any) => {
             this._mensajeService.openSnackBar('Avion actualizado correctamente!')
             this._dialogRef.close(true);
-
             console.log(this.data)
+            console.log('Avion actualizado:', updateAvion)
           },
           error: (err: any) => {
             console.log(err)
           }
         });
       } else {
+
+        const newAvion = {
+          idAvion: '1000',
+          aerolineaAvion: this.avionForm.get('aerolineaAvion').value,
+          estado: this.estado
+        }
+
+        console.log('nuevo: ', newAvion)
+
         this._avionService.addAvion(newAvion).subscribe({
           next: (val: any) => {
+            console.log('Avion creado: ', newAvion)
             this._mensajeService.openSnackBar('Avion añadido correctamente!');
             this._dialogRef.close(true);
           },
           error: (err: any) => {
             console.log(err)
+            console.log(newAvion)
           }
         });
       }
