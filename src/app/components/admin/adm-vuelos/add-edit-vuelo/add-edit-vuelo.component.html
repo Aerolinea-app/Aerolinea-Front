@@ -42,26 +42,37 @@
     <div class="row">
       <div class="col">
         <div class="mat-form-field">
-          <input type="datetime-local" matInput placeholder=" " formControlName="fechaSalida">
+          <input type="datetime-local" matInput placeholder=" " formControlName="fechaSalida" [min]="currentDateTime"
+            (change)="setMinArrivalDate()">
           <label>Fecha y Hora de Salida</label>
           <div class="mat-form-field-outline"></div>
-          <mat-error *ngIf="vueloForm.get('fechaSalida').invalid && vueloForm.get('fechaSalida').touched" class="mat-error">
+          <mat-error *ngIf="vueloForm.get('fechaSalida').invalid && vueloForm.get('fechaSalida').touched"
+            class="mat-error">
             Hora de salida es requerida.
+          </mat-error>
+          <mat-error class="mat-error" *ngIf="vueloForm.get('fechaSalida').hasError('fechaPasada')">
+            La fecha y hora de salida no puede ser anterior a la fecha y hora actual.
           </mat-error>
         </div>
       </div>
 
       <div class="col">
         <div class="mat-form-field">
-          <input type="datetime-local" matInput placeholder=" " formControlName="fechaLlegada" >
+          <input type="datetime-local" matInput placeholder=" " formControlName="fechaLlegada"  (input)="checkFechaLlegadaValidity()">
           <label>Fecha y Hora de Llegada</label>
           <div class="mat-form-field-outline"></div>
-          <mat-error *ngIf="vueloForm.get('fechaLlegada').invalid && vueloForm.get('fechaLlegada').touched" class="mat-error">
-            Hora de salida es requerida.
+          <mat-error *ngIf="vueloForm.get('fechaLlegada').invalid && vueloForm.get('fechaLlegada').touched"
+            class="mat-error">
+            Hora de llegada es requerida.
+          </mat-error>
+          <mat-error class = "mat-error" *ngIf="vueloForm.get('fechaLlegada').hasError('fechaInvalida')">
+            La fecha de llegada debe ser máximo 24 horas después de la fecha de salida.
           </mat-error>
         </div>
       </div>
     </div>
+
+
 
     <div class="row">
       <div class="col-4">

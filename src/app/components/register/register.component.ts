@@ -16,6 +16,16 @@ import { UsuarioService } from 'src/app/services/Usuarios/usuario.service';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
+
+  cedulaControl: FormControl = new FormControl('');
+
+  cedulaErrors = {
+    required: 'La cédula es requerida',
+    pattern: 'La cédula debe contener solo números',
+    exist: 'La cédula ingresada ya existe',
+    specialChars: 'La cédula no puede contener caracteres especiales'
+  };
+
   registrationForm: FormGroup;
   usuarios: any[];
   disponible = false;
@@ -27,40 +37,25 @@ export class RegisterComponent implements OnInit {
     private _mensajeService: MensajesService
   ) {
     this.registrationForm = this._formBuilder.group({
-      cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
-      nombre: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
-      apellido: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
+      cedula: ['', [Validators.required]],
+      nombre: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+(\\s[a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$')]],
+      apellido: ['', [Validators.required, Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+(\\s[a-zA-ZáéíóúÁÉÍÓÚñÑ]+)*$')]],
       correo: ['', [Validators.required, Validators.pattern('^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$')]],
     });
-
-    const cedulaControl = this.registrationForm.get('cedula') as FormControl;
-
-    this.registrationForm
-      .get('cedula')
-      .setValidators([
-        Validators.required,
-        (control) => this.validarCedula(cedulaControl),
-      ]);
   }
 
   ngOnInit(): void {
     this.getUsuarios();
+    this.registrationForm.setControl('cedula', this.cedulaControl);
+    this.cedulaControl.valueChanges.subscribe((value) => {
+      this.cedulaControl.setErrors(null);
+    });
   }
 
   getUsuarios(): void {
     this._usuarioService.getUsuarioList().subscribe((usuarios) => {
       this.usuarios = usuarios;
     });
-  }
-
-  validarCedula(control: FormControl): { [key: string]: any } | null {
-    this.disponible = this.getCedulas(control.value);
-
-    if (this.disponible === true) {
-      return { cedulaNoDisponible: true };
-    }
-
-    return null;
   }
 
   getCedulas(cedula: string): boolean {
@@ -71,6 +66,43 @@ export class RegisterComponent implements OnInit {
     }
     return false;
   }
+
+  onCedulaInput(): void {
+    const cedula = this.registrationForm.get('cedula').value;
+    const isValid = /^\d+$/.test(cedula); // Validar si solo contiene números
+    if (!isValid) {
+      this.cedulaControl.setErrors({ specialChars: true }); // Establecer error si contiene caracteres especiales
+    } else {
+      const exists = this.getCedulas(cedula);
+      if (exists) {
+        this.cedulaControl.setErrors({ exist: true }); // Establecer error si la cédula existe
+      }
+    }
+  }
+
+  capitalizeWords(value: string): string {
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+
+  capitalizeInput(controlName: string): void {
+    const control = this.registrationForm.get(controlName);
+    if (control && control.value) {
+      control.setValue(this.capitalizeWords(control.value), { emitEvent: false });
+    }
+  }
+
+  lowercaseInput(controlName: string): void {
+    const control = this.registrationForm.get(controlName);
+    if (control && control.value) {
+      control.setValue(control.value.toLowerCase(), { emitEvent: false });
+    }
+  }
+
 
   onFormSubmit() {
     if (this.registrationForm.valid) {

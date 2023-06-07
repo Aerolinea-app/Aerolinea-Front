@@ -7,9 +7,7 @@ import { AddEditUsuarioComponent } from './add-edit-usuario/add-edit-usuario.com
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { ConfirmacionComponent } from 'src/app/shared/confirmacion/confirmacion.component';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { RolUsuario } from 'src/app/models/RolUsuario';
 import { UsuarioService } from 'src/app/services/Usuarios/usuario.service';
-import { Usuario } from 'src/app/models/Usuario';
 
 @Component({
   selector: 'app-adm-usuarios',
@@ -17,7 +15,7 @@ import { Usuario } from 'src/app/models/Usuario';
   styleUrls: ['./adm-usuarios.component.css'],
 })
 export class AdmUsuariosComponent implements OnInit, AfterViewInit {
-  usuarios: Usuario[];
+  usuarios: any[];
 
   displayedColumns: string[] = [
     'id',
@@ -39,7 +37,7 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
     private _usuarioService: UsuarioService,
     private _mensajeService: MensajesService,
     private _liveAnnouncer: LiveAnnouncer
-  ) {}
+  ) { }
 
   getRolDescripcion(idRol: number): string {
     if (idRol === 1) {
@@ -142,6 +140,8 @@ export class AdmUsuariosComponent implements OnInit, AfterViewInit {
   }
 
   openEditForm(data: any) {
+    console.log('Datos recibidos para editar:', data); // Agrega este console.log
+
     const dialogRef = this._dialog.open(AddEditUsuarioComponent, {
       data,
     });
