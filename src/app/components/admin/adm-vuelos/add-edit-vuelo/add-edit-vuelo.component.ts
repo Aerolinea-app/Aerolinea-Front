@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Aeropuerto } from 'src/app/models/Aeropuerto';
 import { AeropuertoService } from 'src/app/services/Aeropuerto/aeropuerto.service';
@@ -8,6 +8,9 @@ import { AvionService } from 'src/app/services/Avion/avion.service';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
 import { VueloService } from 'src/app/services/Vuelo/vuelo.service';
 import moment from 'moment';
+import { DatePipe } from '@angular/common';
+import { formatDate } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-edit-vuelo',
@@ -18,7 +21,8 @@ export class AddEditVueloComponent {
   today = new Date();
   maxDate = new Date(new Date().getFullYear() + 1, 11, 31); // Ejemplo: fecha máxima de un año a partir de hoy
   departureDate: Date;
-  minArrivalDate: Date;
+  minArrivalDate: string;
+
 
   vueloForm: FormGroup;
   aeropuertos: any[];
@@ -29,13 +33,16 @@ export class AddEditVueloComponent {
   fechaSalida = '';
   estado = '';
 
+  currentDateTime: string = formatDate(new Date(), 'yyyy-MM-ddTHH:mm', 'en-US');
+
   constructor(
     private _fb: FormBuilder,
     private _vueloService: VueloService,
     private _aeropuertoService: AeropuertoService,
     private _dialogRef: MatDialogRef<AddEditVueloComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private _mensajeService: MensajesService
+    private _mensajeService: MensajesService,
+    private datePipe: DatePipe
   ) {
     this.vueloForm = this._fb.group({
       id: '',
@@ -57,14 +64,60 @@ export class AddEditVueloComponent {
       this.vueloForm.get('estado').setValue(estado); // Establece el valor del campo 'aerolinea'
       this.vueloForm.patchValue(this.data);
     }
+
   }
 
   setMinArrivalDate(): void {
-    if (this.departureDate) {
-      this.minArrivalDate = new Date(this.departureDate.getTime());
-      this.minArrivalDate.setDate(this.minArrivalDate.getDate() + 1);
+    const fechaSalidaValue = new Date(this.vueloForm.get('fechaSalida').value);
+    if (fechaSalidaValue) {
+      const minArrivalDate = new Date(fechaSalidaValue.getTime() + 24 * 60 * 60 * 1000);
+      this.minArrivalDate = minArrivalDate.toISOString();
+      this.vueloForm.get('fechaLlegada').setValue(null);
+      this.checkFechaLlegadaValidity();
     }
   }
+
+  validateFechaSalida(control: AbstractControl): ValidationErrors | null {
+    const fechaSalidaValue = new Date(control.value);
+    const fechaActual = new Date();
+
+    if (fechaSalidaValue < fechaActual) {
+      return { fechaPasada: true };
+    }
+
+    return null;
+  }
+
+  validateFechaLlegada(control: AbstractControl): Promise<ValidationErrors | null> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const fechaLlegadaValue = new Date(control.value);
+        const fechaSalidaValue = new Date(this.vueloForm.get('fechaSalida').value);
+
+        if (
+          fechaLlegadaValue > fechaSalidaValue &&
+          fechaLlegadaValue <= new Date(fechaSalidaValue.getTime() + 24 * 60 * 60 * 1000)
+        ) {
+          resolve({ fechaInvalida: true });
+        } else {
+          resolve(null);
+        }
+      }, 0);
+    });
+  }
+
+  checkFechaLlegadaValidity(): void {
+    const fechaLlegadaControl = this.vueloForm.get('fechaLlegada');
+    const fechaLlegadaValue = new Date(fechaLlegadaControl.value);
+    const fechaSalidaValue = new Date(this.vueloForm.get('fechaSalida').value);
+
+    if (fechaLlegadaValue <= fechaSalidaValue || fechaLlegadaValue > new Date(fechaSalidaValue.getTime() + 24 * 60 * 60 * 1000)) {
+      fechaLlegadaControl.setErrors({ fechaInvalida: true });
+    } else {
+      fechaLlegadaControl.setErrors(null);
+    }
+  }
+
 
   ngOnInit(): void {
     this.vueloForm.patchValue(this.data);
@@ -85,6 +138,8 @@ export class AddEditVueloComponent {
       }
     );
   }
+
+
 
   onFormSubmit() {
     if (this.vueloForm.valid) {

@@ -7,7 +7,7 @@
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Nombre</mat-label>
-                    <input matInput type="text" placeholder="Ej. Aeropuerto Internacional Alfonso Bonilla Aragon" formControlName="nombre">
+                    <input (input)="capitalizeInput('nombre')"  matInput type="text" placeholder="Ej. Aeropuerto Internacional Alfonso Bonilla Aragon" formControlName="nombre">
                     <mat-error *ngIf="aeropuertoForm.get('nombre').hasError('required')">El nombre es requerido</mat-error>
                     <mat-error *ngIf="aeropuertoForm.get('nombre').hasError('minlength')">El nombre debe tener al menos 5 caracteres</mat-error>
                     <mat-error *ngIf="aeropuertoForm.get('nombre').hasError('maxlength')">El nombre debe tener como máximo 50 caracteres</mat-error>
@@ -17,7 +17,7 @@
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Iata</mat-label>
-                    <input matInput type="text" placeholder="Ej. CLO" formControlName="iata">
+                    <input (input)="toUpperCaseInput('iata')" matInput type="text" placeholder="Ej. CLO" formControlName="iata" maxlength="3">
                     <mat-error *ngIf="aeropuertoForm.get('iata').hasError('required')">La IATA es requerida</mat-error>
                     <mat-error *ngIf="aeropuertoForm.get('iata').hasError('minlength')">La IATA debe tener 3 caracteres</mat-error>
                     <mat-error *ngIf="aeropuertoForm.get('iata').hasError('maxlength')">La IATA debe tener 3 caracteres</mat-error>
@@ -27,7 +27,7 @@
             <div class="col">
                 <mat-form-field appearance="outline">
                     <mat-label>Ubicacion</mat-label>
-                    <input matInput type="text" placeholder="Ej. Cali" formControlName="ubicacion">
+                    <input (input)="capitalizeInput('ubicacion')" matInput type="text" placeholder="Ej. Cali" formControlName="ubicacion">
                     <mat-error *ngIf="aeropuertoForm.get('ubicacion').hasError('required')">La ubicación es requerida</mat-error>
                     <mat-error *ngIf="aeropuertoForm.get('ubicacion').hasError('minlength')">La ubicación debe tener al menos 3 caracteres</mat-error>
                     <mat-error *ngIf="aeropuertoForm.get('ubicacion').hasError('maxlength')">La ubicación debe tener como máximo 50 caracteres</mat-error>

@@ -26,11 +26,13 @@ export class AddEditAeropuertoComponent {
   ) {
     this.aeropuertoForm = this._fb.group({
       id: '',
-      nombre: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]+$/)]],
-      iata: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]+$/)]],
-      ubicacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]+$/)]],
+      nombre: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(50), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]*[\wáéíóúÁÉÍÓÚñÑ][\w\sáéíóúÁÉÍÓÚñÑ]*$/)]],
+      iata: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(3), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ]*[\wáéíóúÁÉÍÓÚñÑ][\w\sáéíóúÁÉÍÓÚñÑ]*$/)]],
+      ubicacion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(/^[\w\sáéíóúÁÉÍÓÚñÑ.]*[\wáéíóúÁÉÍÓÚñÑ][\w\sáéíóúÁÉÍÓÚñÑ.]*(?<!\.)$/)]],
       estado: ['', Validators.required],
     });
+
+
     if (this.data && this.data.nombre) {
       const idAeropuerto = this.data.idAeropuerto;
       const nombre = this.data.nombre; // Obtén el valor de aerolinea del objeto data
@@ -45,6 +47,29 @@ export class AddEditAeropuertoComponent {
   ngOnInit(): void {
     // Obtener el vuelo actual del formulario
     this.aeropuertoForm.patchValue(this.data);
+  }
+
+  capitalizeWords(value: string): string {
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
+
+  capitalizeInput(controlName: string): void {
+    const control = this.aeropuertoForm.get(controlName);
+    if (control && control.value) {
+      control.setValue(this.capitalizeWords(control.value), { emitEvent: false });
+    }
+  }
+
+  toUpperCaseInput(controlName: string): void {
+    const control = this.aeropuertoForm.get(controlName);
+    if (control && control.value) {
+      control.setValue(control.value.toUpperCase(), { emitEvent: false });
+    }
   }
 
   onFormSubmit() {

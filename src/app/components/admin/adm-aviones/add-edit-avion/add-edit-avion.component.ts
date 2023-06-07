@@ -47,6 +47,7 @@ export class AddEditAvionComponent implements OnInit {
     this._dialogRef.close(false);
   }
 
+
   capitalizeWords(value: string): string {
     return value
       .toLowerCase()
@@ -55,7 +56,7 @@ export class AddEditAvionComponent implements OnInit {
       .join(' ');
   }
 
-  
+
   capitalizeInput(controlName: string): void {
     const control = this.avionForm.get(controlName);
     if (control && control.value) {

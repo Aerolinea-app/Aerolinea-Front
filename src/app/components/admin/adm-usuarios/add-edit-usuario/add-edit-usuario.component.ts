@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { RolUsuario } from 'src/app/models/RolUsuario';
 import { MensajesService } from 'src/app/services/Mensajes/mensajes.service';
@@ -20,6 +20,15 @@ export class AddEditUsuarioComponent implements OnInit {
   usuarios: any[]
   estado = ''
 
+  cedulaControl: FormControl = new FormControl('');
+
+  cedulaErrors = {
+    required: 'La cédula es requerida',
+    pattern: 'La cédula debe contener solo números',
+    exist: 'La cédula ingresada ya existe',
+    specialChars: 'La cédula no puede contener caracteres especiales'
+  };
+
   constructor(
     private _fb: FormBuilder,
     private _usuarioService: UsuarioService,
@@ -28,43 +37,25 @@ export class AddEditUsuarioComponent implements OnInit {
     private _mensajeService: MensajesService,
   ) {
     this.usuarioForm = this._fb.group({
-      id: '',
+      id: [''],
       idRolusuario: ['', Validators.required],
       nombre: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\u00C0-\u00FF]+(\s[a-zA-Z\u00C0-\u00FF]+)*$/)]],
       apellido: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\u00C0-\u00FF]+(\s[a-zA-Z\u00C0-\u00FF]+)*$/)]],
-      cedula: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      cedula: ['', [Validators.required]],
       correo: ['', [Validators.required, Validators.pattern(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)]],
       estado: ['', Validators.required]
     });
 
-    const cedulaControl = this.usuarioForm.get('cedula') as FormControl;
-
-    this.usuarioForm
-      .get('cedula')
-      .setValidators([
-        Validators.required,
-        (control) => this.validarCedula(cedulaControl),
-      ]);
 
     if (this.data && this.data.nombre) {
       const cedula = this.data.cedula;
-      const nombreUsuario = this.data.nombre; // Obtén el valor de aerolinea del objeto data
-      this.usuarioForm.get('id').setValue(cedula); // Establece el valor del campo 'id'
-      this.usuarioForm.get('nombre').setValue(nombreUsuario); // Establece el valor del campo 'aerolinea'
+      const nombreUsuario = this.data.nombre;
+      this.usuarioForm.get('id').setValue(cedula);
+      this.usuarioForm.get('nombre').setValue(nombreUsuario);
       this.usuarioForm.patchValue(this.data);
     }
 
 
-  }
-
-  validarCedula(control: FormControl): { [key: string]: any } | null {
-    this.disponible = this.getCedulas(control.value);
-
-    if (this.disponible === true) {
-      return { cedulaNoDisponible: true };
-    }
-
-    return null;
   }
 
   getCedulas(cedula: string): boolean {
@@ -76,9 +67,36 @@ export class AddEditUsuarioComponent implements OnInit {
     return false;
   }
 
+
   ngOnInit(): void {
-    this.usuarioForm.patchValue(this.data)
+    this.usuarioForm.patchValue(this.data);
     this.getUsuarios();
+    this.usuarioForm.setControl('cedula', this.cedulaControl);
+    this.cedulaControl.valueChanges.subscribe((value) => {
+      this.cedulaControl.setErrors(null); // Restablecer errores al cambiar el valor
+    });
+
+    if (this.data && this.data.cedula) {
+      this.cedulaControl.setValue(this.data.cedula);
+    }
+  }
+
+  onCedulaInput(): void {
+    const cedula = this.usuarioForm.get('cedula').value;
+    const isEditing = this.data && this.data.cedula === cedula;
+    if (isEditing) {
+      this.cedulaControl.setErrors(null); // No mostrar error si está editando
+      return;
+    }
+    const isValid = /^\d+$/.test(cedula); // Validar si solo contiene números
+    if (!isValid) {
+      this.cedulaControl.setErrors({ specialChars: true }); // Establecer error si contiene caracteres especiales
+    } else {
+      const exists = this.getCedulas(cedula);
+      if (exists) {
+        this.cedulaControl.setErrors({ exist: true }); // Establecer error si la cédula existe
+      }
+    }
   }
 
   getUsuarios(): void {
@@ -100,6 +118,13 @@ export class AddEditUsuarioComponent implements OnInit {
     const control = this.usuarioForm.get(controlName);
     if (control && control.value) {
       control.setValue(this.capitalizeWords(control.value), { emitEvent: false });
+    }
+  }
+
+  lowercaseInput(controlName: string): void {
+    const control = this.usuarioForm.get(controlName);
+    if (control && control.value) {
+      control.setValue(control.value.toLowerCase(), { emitEvent: false });
     }
   }
 
@@ -134,8 +159,6 @@ export class AddEditUsuarioComponent implements OnInit {
           correo: this.usuarioForm.get('correo').value,
           estado: this.estado
         };
-
-        console.log('uupdate: ', updateUsuario)
 
         this._usuarioService.updateUsuario(updateUsuario)
           .subscribe({
